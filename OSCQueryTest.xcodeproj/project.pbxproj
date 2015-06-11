@@ -11,41 +11,38 @@
 		304F206B1B27FC8D00995372 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F206A1B27FC8D00995372 /* main.m */; };
 		304F206D1B27FC8D00995372 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 304F206C1B27FC8D00995372 /* Images.xcassets */; };
 		304F20701B27FC8D00995372 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 304F206E1B27FC8D00995372 /* MainMenu.xib */; };
-		304F207C1B27FC8D00995372 /* OSCQueryTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F207B1B27FC8D00995372 /* OSCQueryTestTests.m */; };
+		304F20871B27FCB000995372 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F20861B27FCB000995372 /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		304F208A1B28036400995372 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F20891B28036400995372 /* GCDAsyncSocket.m */; };
+		304F208D1B2803C400995372 /* JSONKit-License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 304F208C1B2803C400995372 /* JSONKit-License.txt */; };
+		304F20901B28061400995372 /* OSCQueryServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F208F1B28061400995372 /* OSCQueryServer.m */; };
+		304F20931B28196D00995372 /* OSCQueryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F20921B28196D00995372 /* OSCQueryClient.m */; };
+		304F20971B295DD800995372 /* OSCQueryHTTPHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F20961B295DD800995372 /* OSCQueryHTTPHeader.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		304F20761B27FC8D00995372 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 304F205A1B27FC8D00995372 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 304F20611B27FC8D00995372;
-			remoteInfo = OSCQueryTest;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		304F20621B27FC8D00995372 /* OSCQueryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSCQueryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		304F20661B27FC8D00995372 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		304F20671B27FC8D00995372 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		304F20671B27FC8D00995372 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		304F20681B27FC8D00995372 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		304F206A1B27FC8D00995372 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		304F206C1B27FC8D00995372 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		304F206F1B27FC8D00995372 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		304F20751B27FC8D00995372 /* OSCQueryTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSCQueryTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		304F207A1B27FC8D00995372 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		304F207B1B27FC8D00995372 /* OSCQueryTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSCQueryTestTests.m; sourceTree = "<group>"; };
+		304F20851B27FCB000995372 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		304F20861B27FCB000995372 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		304F20881B28036400995372 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		304F20891B28036400995372 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		304F208C1B2803C400995372 /* JSONKit-License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "JSONKit-License.txt"; sourceTree = "<group>"; };
+		304F208E1B28061400995372 /* OSCQueryServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCQueryServer.h; sourceTree = "<group>"; };
+		304F208F1B28061400995372 /* OSCQueryServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCQueryServer.m; sourceTree = "<group>"; };
+		304F20911B28196D00995372 /* OSCQueryClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCQueryClient.h; sourceTree = "<group>"; };
+		304F20921B28196D00995372 /* OSCQueryClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCQueryClient.m; sourceTree = "<group>"; };
+		304F20941B286F3000995372 /* OSCQueryDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSCQueryDefinitions.h; sourceTree = "<group>"; };
+		304F20951B295DD800995372 /* OSCQueryHTTPHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCQueryHTTPHeader.h; sourceTree = "<group>"; };
+		304F20961B295DD800995372 /* OSCQueryHTTPHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSCQueryHTTPHeader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		304F205F1B27FC8D00995372 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		304F20721B27FC8D00995372 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -59,7 +56,6 @@
 			isa = PBXGroup;
 			children = (
 				304F20641B27FC8D00995372 /* OSCQueryTest */,
-				304F20781B27FC8D00995372 /* OSCQueryTestTests */,
 				304F20631B27FC8D00995372 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -68,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				304F20621B27FC8D00995372 /* OSCQueryTest.app */,
-				304F20751B27FC8D00995372 /* OSCQueryTestTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,6 +71,14 @@
 		304F20641B27FC8D00995372 /* OSCQueryTest */ = {
 			isa = PBXGroup;
 			children = (
+				304F20941B286F3000995372 /* OSCQueryDefinitions.h */,
+				304F20951B295DD800995372 /* OSCQueryHTTPHeader.h */,
+				304F20961B295DD800995372 /* OSCQueryHTTPHeader.m */,
+				304F208E1B28061400995372 /* OSCQueryServer.h */,
+				304F208F1B28061400995372 /* OSCQueryServer.m */,
+				304F20911B28196D00995372 /* OSCQueryClient.h */,
+				304F20921B28196D00995372 /* OSCQueryClient.m */,
+				304F208B1B28037400995372 /* External code */,
 				304F20671B27FC8D00995372 /* AppDelegate.h */,
 				304F20681B27FC8D00995372 /* AppDelegate.m */,
 				304F206C1B27FC8D00995372 /* Images.xcassets */,
@@ -94,21 +97,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		304F20781B27FC8D00995372 /* OSCQueryTestTests */ = {
+		304F208B1B28037400995372 /* External code */ = {
 			isa = PBXGroup;
 			children = (
-				304F207B1B27FC8D00995372 /* OSCQueryTestTests.m */,
-				304F20791B27FC8D00995372 /* Supporting Files */,
+				304F208C1B2803C400995372 /* JSONKit-License.txt */,
+				304F20851B27FCB000995372 /* JSONKit.h */,
+				304F20861B27FCB000995372 /* JSONKit.m */,
+				304F20881B28036400995372 /* GCDAsyncSocket.h */,
+				304F20891B28036400995372 /* GCDAsyncSocket.m */,
 			);
-			path = OSCQueryTestTests;
-			sourceTree = "<group>";
-		};
-		304F20791B27FC8D00995372 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				304F207A1B27FC8D00995372 /* Info.plist */,
-			);
-			name = "Supporting Files";
+			name = "External code";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,24 +129,6 @@
 			productReference = 304F20621B27FC8D00995372 /* OSCQueryTest.app */;
 			productType = "com.apple.product-type.application";
 		};
-		304F20741B27FC8D00995372 /* OSCQueryTestTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 304F20821B27FC8D00995372 /* Build configuration list for PBXNativeTarget "OSCQueryTestTests" */;
-			buildPhases = (
-				304F20711B27FC8D00995372 /* Sources */,
-				304F20721B27FC8D00995372 /* Frameworks */,
-				304F20731B27FC8D00995372 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				304F20771B27FC8D00995372 /* PBXTargetDependency */,
-			);
-			name = OSCQueryTestTests;
-			productName = OSCQueryTestTests;
-			productReference = 304F20751B27FC8D00995372 /* OSCQueryTestTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -160,10 +140,6 @@
 				TargetAttributes = {
 					304F20611B27FC8D00995372 = {
 						CreatedOnToolsVersion = 6.3.1;
-					};
-					304F20741B27FC8D00995372 = {
-						CreatedOnToolsVersion = 6.3.1;
-						TestTargetID = 304F20611B27FC8D00995372;
 					};
 				};
 			};
@@ -181,7 +157,6 @@
 			projectRoot = "";
 			targets = (
 				304F20611B27FC8D00995372 /* OSCQueryTest */,
-				304F20741B27FC8D00995372 /* OSCQueryTestTests */,
 			);
 		};
 /* End PBXProject section */
@@ -192,14 +167,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				304F206D1B27FC8D00995372 /* Images.xcassets in Resources */,
+				304F208D1B2803C400995372 /* JSONKit-License.txt in Resources */,
 				304F20701B27FC8D00995372 /* MainMenu.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		304F20731B27FC8D00995372 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,28 +179,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				304F208A1B28036400995372 /* GCDAsyncSocket.m in Sources */,
+				304F20971B295DD800995372 /* OSCQueryHTTPHeader.m in Sources */,
+				304F20901B28061400995372 /* OSCQueryServer.m in Sources */,
 				304F206B1B27FC8D00995372 /* main.m in Sources */,
 				304F20691B27FC8D00995372 /* AppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		304F20711B27FC8D00995372 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				304F207C1B27FC8D00995372 /* OSCQueryTestTests.m in Sources */,
+				304F20931B28196D00995372 /* OSCQueryClient.m in Sources */,
+				304F20871B27FCB000995372 /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		304F20771B27FC8D00995372 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 304F20611B27FC8D00995372 /* OSCQueryTest */;
-			targetProxy = 304F20761B27FC8D00995372 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		304F206E1B27FC8D00995372 /* MainMenu.xib */ = {
@@ -328,6 +286,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = OSCQueryTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -339,46 +298,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = OSCQueryTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		304F20831B27FC8D00995372 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = OSCQueryTestTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSCQueryTest.app/Contents/MacOS/OSCQueryTest";
-			};
-			name = Debug;
-		};
-		304F20841B27FC8D00995372 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = OSCQueryTestTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSCQueryTest.app/Contents/MacOS/OSCQueryTest";
 			};
 			name = Release;
 		};
@@ -399,14 +323,6 @@
 			buildConfigurations = (
 				304F20801B27FC8D00995372 /* Debug */,
 				304F20811B27FC8D00995372 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
-		304F20821B27FC8D00995372 /* Build configuration list for PBXNativeTarget "OSCQueryTestTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				304F20831B27FC8D00995372 /* Debug */,
-				304F20841B27FC8D00995372 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
