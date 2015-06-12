@@ -19,7 +19,6 @@
 #define OSC_TYPE_STRING @"s"
 #define OSC_TYPE_NIL @"N"
 
-#define OSC_QUERY_REPLY_RECEIVED @"QUERYREPLY"
 
 #define HTTP_HEADER 0
 #define HTTP_BODY 10
@@ -39,7 +38,10 @@
 
 #define HTTP_NOLENGTH -1
 
-#define HTTP_RESPONSE_HEADER_200_OK @"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: keep-alive\r\nCache-Control: no-cache,must-revalidate\r\n"
+#define HTTP_RESPONSE_HEADER_200_OK @"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: keep-alive\r\n"
+#define HTTP_RESPONSE_HEADER_CRLF @"\r\n"
+
+#define HTTP_RESPONSE_HEADER_404_ERROR @"HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\nConnection: keep-alive\r\n"
 #define HTTP_RESPONSE_HEADER_CRLF @"\r\n"
 
 // header for a HTTP GET - _%GETURL%_ should be replaced with the GET address

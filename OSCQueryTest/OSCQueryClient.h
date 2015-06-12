@@ -10,6 +10,7 @@
 #import "GCDAsyncSocket.h"
 #import "JSONKit.h"
 #import "OSCQueryHTTPHeader.h"
+#import "OSCQueryClientDelegate.h"
 
 @interface OSCQueryClient : NSObject <GCDAsyncSocketDelegate> {
 
@@ -17,14 +18,17 @@
     
     NSString *host;
     int port;
+    
+    dispatch_queue_t queue;
+    NSMutableArray *requests;
 }
 
-@property (strong) NSNotificationCenter *clientNotificationCenter;
+@property (weak) id<OSCQueryClientDelegate> delegate;
 
 - (instancetype)initWithHost:(NSString *)host onPort:(int)port;
 
 - (void)queryFullAddressSpace;
-
+- (void)queryAddress:(NSString *)address;
 - (void)disconnect;
 
 @end

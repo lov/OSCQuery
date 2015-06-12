@@ -27,7 +27,10 @@
     addressSpaceDict = [NSMutableDictionary new];
     fullPathesDict = [NSMutableDictionary new];
     
+    currentAction = nil;
+    
     [[self serversTableView] setDoubleAction:@selector(serverSelected)];
+    [[self addressSpaceTableView] setDoubleAction:@selector(addressSelected)];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -49,6 +52,8 @@
     [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/y"];
     
     [testServer2 addOSCAddress:@"/1/fader" withDescription:@"Fader on Layer 1"];
+    [testServer1 setType:OSC_TYPE_FLOAT forAddress:@"/1/fader"];
+    [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/1/fader"];
 
     /*
     // measuring performance
@@ -80,7 +85,6 @@
     
     if (client) {
         
-        [[client clientNotificationCenter] removeObserver:self name:OSC_QUERY_REPLY_RECEIVED object:client];
         [client disconnect];
         
         addressSpaceDict = nil;
@@ -108,6 +112,21 @@
         }];
     });
 
+}
+
+#pragma mark Get Address space info
+
+- (void)addressSelected {
+    
+   // NSLog(@"addressSelected");
+    
+    __block NSString *path = @"";
+    
+    dispatch_sync(serversQueue, ^{
+       path = [[fullPathesDict allKeys] objectAtIndex:[[self addressSpaceTableView] clickedRow]];
+    });
+    
+    [client queryAddress:path];
 }
 
 #pragma mark TableView
@@ -244,7 +263,7 @@
                 
                 if (client) {
                     
-                    [[client clientNotificationCenter] addObserver:self selector:@selector(replyDictionaryReceived:) name:OSC_QUERY_REPLY_RECEIVED object:client];
+                    [client setDelegate:self];
                     
                     [self writeToLog:[NSString stringWithFormat:@"client created and connected to %s:%d", addressStr,port]];
                     
@@ -272,30 +291,43 @@
 }
 
 
-#pragma mark Handling Reply
+#pragma mark OSCQuery delegate
 
-- (void)replyDictionaryReceived:(NSNotification *)note {
+- (void)replyReceived:(NSDictionary *)reply forRequest:(NSString *)request {
     
-    NSDictionary *data = [note userInfo];
+    NSDictionary *data = reply;
     
-    if (data) {
+    if (data && request) {
+    
+        if ([request isEqualToString:@"/"]) {
         
-        dispatch_sync(serversQueue, ^{
-            [addressSpaceDict removeAllObjects];
-            [fullPathesDict removeAllObjects];
-        });
+            dispatch_sync(serversQueue, ^{
+                [addressSpaceDict removeAllObjects];
+                [fullPathesDict removeAllObjects];
+            });
+            
+            //    [addressSpaceDict setObject:[NSMutableDictionary new] forKey:@"/"];
+            //    [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:[addressSpaceDict objectForKey:@"/"]];
+            [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
+            
+            //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
+            //      NSLog(@"fullPathesDict: %@", fullPathesDict);
+            
+            [[self addressSpaceTableView] reloadData];
+
+        } else {
+            
+            
+        }
         
-    //    [addressSpaceDict setObject:[NSMutableDictionary new] forKey:@"/"];
-    //    [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:[addressSpaceDict objectForKey:@"/"]];
-        [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
         
-      //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
-            NSLog(@"fullPathesDict: %@", fullPathesDict);
-        
-        [[self addressSpaceTableView] reloadData];
-        
-        [self writeToLog:[NSString stringWithFormat:@"======== REPLY ========\n%@\n=======================================", data]];
+        [self writeToLog:[NSString stringWithFormat:@"======== REPLY ========\n%@\n========================", data]];
     }
+}
+
+- (void)errorReceived:(int)error forRequest:(NSString *)request {
+    
+    [self writeToLog:[NSString stringWithFormat:@"Error %d for request: %@\n========================", error, request]];
 }
 
 - (void)buildAddressSpaceDataWithDictionary:(NSDictionary *)srcDict toDictionary:(NSMutableDictionary *)targetDict {
@@ -320,6 +352,20 @@
             [fullPathesDict setObject:srcDict forKey:[srcDict objectForKey:OSCQUERY_FULL_PATH]];
         });
 
+    }
+}
+
+- (IBAction)requestData:(id)sender {
+    
+    NSString *request = [sender stringValue];
+    
+    if (request && [request length]>0) {
+    
+        [client queryAddress:request];
+
+    } else {
+        
+        NSBeep();
     }
 }
 

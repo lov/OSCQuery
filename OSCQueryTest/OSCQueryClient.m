@@ -35,7 +35,9 @@
             return nil;
         }
         
-        [self setClientNotificationCenter:[NSNotificationCenter new]];
+        requests = [NSMutableArray new];
+        queue =  dispatch_queue_create("com.imimot.oscqueryclientqueue", DISPATCH_QUEUE_SERIAL);
+
     }
     
     return self;
@@ -47,6 +49,8 @@
 }
 
 - (void)disconnect {
+    
+    [self setDelegate:nil];
     
     if (socket) {
         
@@ -71,29 +75,51 @@
     
     OSCQueryHTTPHeader *header = [OSCQueryHTTPHeader parseHeader:dataString];
     
+  //  NSLog(@"dataString: %@", dataString);
+    
     if (header) {
     
-        if ([header type] == HTTP_RESPONSE && [header statusCode] == HTTP_STATUS_OK) {
+        if ([header type] == HTTP_RESPONSE) {
             
-            NSInteger content_length = [header contentLength];
+            if ([header statusCode] == HTTP_STATUS_OK) {
             
-           // NSLog(@"content_length: %ld", content_length);
-            
-            // we don't support Chunked Transfer Encoding (http://en.wikipedia.org/wiki/Chunked_transfer_encoding) yet
-            // so only continue if we received a valid HTTP Content-Length field
-            if (content_length != HTTP_NOLENGTH) {
+                NSInteger content_length = [header contentLength];
                 
-                // so, just read the data
-                [sock readDataToLength:content_length withTimeout:-1 tag:0];
+                // NSLog(@"content_length: %ld", content_length);
                 
+                // we don't support Chunked Transfer Encoding (http://en.wikipedia.org/wiki/Chunked_transfer_encoding) yet
+                // so only continue if we received a valid HTTP Content-Length field
+                if (content_length != HTTP_NOLENGTH) {
+                    
+                    // so, just read the data
+                    [sock readDataToLength:content_length withTimeout:-1 tag:0];
+                    
+                }
+
+            } else if ([header statusCode] == HTTP_STATUS_NOT_FOUND) {
+                
+                // 404 error, notify our delegate
+                
+                __block NSString *request = @"";
+                
+                dispatch_sync(queue, ^{
+                    request = [[requests firstObject] copy];
+                    [requests removeObjectAtIndex:0];
+                });
+
+                if ([self delegate]) {
+                    
+                    [[self delegate] errorReceived:HTTP_STATUS_NOT_FOUND forRequest:request];
+                }
             }
             
+        } else if ([header type] == HTTP_BODY) {
+
             //
             // so, if the header is a HTTP_BODY, basically we could not perform
             // parsing of the header, which _probably_ means this is the body of a response
             //
-        } else if ([header type] == HTTP_BODY) {
-            
+
            // NSLog(@"body: %@", dataString);
             
             //
@@ -106,7 +132,16 @@
             
             if ([dictFromJSON isKindOfClass:[NSDictionary class]]) {
             
-                [[self clientNotificationCenter] postNotificationName:OSC_QUERY_REPLY_RECEIVED object:self userInfo:dictFromJSON];
+                if ([self delegate]) {
+                    __block NSString *request = @"";
+                    
+                    dispatch_sync(queue, ^{
+                        request = [[requests firstObject] copy];
+                        [requests removeObjectAtIndex:0];
+                    });
+
+                    [[self delegate] replyReceived:dictFromJSON forRequest:request];
+                }
             }
             
         }
@@ -122,6 +157,10 @@
     // create our header
     NSString *header = [[HTTP_GET_HEADER stringByReplacingOccurrencesOfString:@"_%GETURL%_" withString:@"/"] stringByReplacingOccurrencesOfString:@"_%HOST%_" withString:[NSString stringWithFormat:@"%@:%d", host, port]];
     
+    dispatch_sync(queue, ^{
+        [requests addObject:[@"/" copy]];
+    });
+    
     // post a GET / request to ask about the whole address space
     [socket writeData:[header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     
@@ -132,5 +171,27 @@
 
 }
 
+- (void)queryAddress:(NSString *)address {
+
+    if (address) {
+            
+        // create our header
+        NSString *header = [[HTTP_GET_HEADER stringByReplacingOccurrencesOfString:@"_%GETURL%_" withString:address] stringByReplacingOccurrencesOfString:@"_%HOST%_" withString:[NSString stringWithFormat:@"%@:%d", host, port]];
+        
+        dispatch_sync(queue, ^{
+            [requests addObject:[address copy]];
+        });
+
+        // post the request
+        [socket writeData:[header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+        
+        // Now we tell the socket to read the full header for the http response.
+        // As per the http protocol, we know the header is terminated with two CRLF's (carriage return, line feed).
+        NSData *responseTerminatorData = [@"\r\n\r\n" dataUsingEncoding:NSASCIIStringEncoding];
+        [socket readDataToData:responseTerminatorData withTimeout:-1.0 tag:0];
+
+    }
+    
+}
 
 @end

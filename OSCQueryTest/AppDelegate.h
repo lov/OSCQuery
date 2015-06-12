@@ -9,8 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "OSCQueryServer.h"
 #import "OSCQueryClient.h"
+#import "OSCQueryClientDelegate.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate> {
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, OSCQueryClientDelegate> {
     
     NSMutableArray *detectedServers;
     
@@ -25,11 +26,14 @@
 
     NSMutableDictionary *addressSpaceDict;
     NSMutableDictionary *fullPathesDict;
+    
+    NSString *currentAction;
 }
 
 @property (weak) IBOutlet NSTableView *serversTableView;
 @property (weak) IBOutlet NSTableView *addressSpaceTableView;
 @property (unsafe_unretained) IBOutlet NSTextView *logView;
 
+- (IBAction)requestData:(id)sender;
 @end
 

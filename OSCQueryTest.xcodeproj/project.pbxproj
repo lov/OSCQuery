@@ -20,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		302100E91B2AA5D500514093 /* OSCQueryClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCQueryClientDelegate.h; sourceTree = "<group>"; };
 		304F20621B27FC8D00995372 /* OSCQueryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSCQueryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		304F20661B27FC8D00995372 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		304F20671B27FC8D00995372 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -78,6 +79,7 @@
 				304F208F1B28061400995372 /* OSCQueryServer.m */,
 				304F20911B28196D00995372 /* OSCQueryClient.h */,
 				304F20921B28196D00995372 /* OSCQueryClient.m */,
+				302100E91B2AA5D500514093 /* OSCQueryClientDelegate.h */,
 				304F208B1B28037400995372 /* External code */,
 				304F20671B27FC8D00995372 /* AppDelegate.h */,
 				304F20681B27FC8D00995372 /* AppDelegate.m */,
@@ -325,6 +327,7 @@
 				304F20811B27FC8D00995372 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -113,9 +113,10 @@
     // read the content
     NSString *content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
-   // NSLog(@"content: %@", content);
+ //   NSLog(@"content: %@", content);
     
     [self handleRequestOnSocket:sock withHeader:content];
+    
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
@@ -139,37 +140,58 @@
     
     if ([source_header type] == HTTP_REQUEST_GET) {
     
-        if ([[source_header requestPath] isEqualTo:@"/"]) {
+        //
+        // if the client has an User-Agent field then the client is probably a web browser
+        // so we should close the socket after sending the info
+        // supporting browser is
+        // I.  useful for debugging
+        // II. give users the possibility to discover the address space in a web browser
+        //     which is cool especially if their OSC client does not support this OSC Query protocol
+        //
+        BOOL isBrowser = [source_header hasUserAgentField];
         
-            //
-            // if the client has an User-Agent field then the client is probably a web browser
-            // so we should close the socket after sending the info
-            // supporting browser is
-            // I.  useful for debugging
-            // II. give users the possibility to discover the address space in a web browser
-            //     which is cool especially if their OSC client does not support this OSC Query protocol
-            //
-            BOOL isBrowser = [source_header hasUserAgentField];
+        NSString *dest_header = @"";
+        
+        __block NSData *body = nil;
+        __block NSDictionary *dict = nil;
+        
+        // request full address space
+        if ([[source_header requestPath] isEqualTo:@"/"]) {
             
-            // create header
-            NSString *dest_header = HTTP_RESPONSE_HEADER_200_OK;
+            dispatch_sync(queue, ^{
+                dict = [oscAddressSpace copy];
+            });
+
+        } else {
+        
             
-            __block NSData *body = nil;
-            
+            dispatch_sync(queue, ^{
+                dict = [self dictionaryForAddress:[source_header requestPath]];
+            });
+
+        
+        }
+
+        
+        if (dict) {
+        
             if (isBrowser) {
                 
                 dispatch_sync(queue, ^{
-                    body = [oscAddressSpace JSONDataWithOptions:JKSerializeOptionPretty error:NULL];
+                    body = [dict JSONDataWithOptions:JKSerializeOptionPretty error:NULL];
                 });
                 
                 
             } else {
                 
                 dispatch_sync(queue, ^{
-                    body = [oscAddressSpace JSONData];
+                    body = [dict JSONData];
                 });
                 
             }
+
+            // create header 200 OK header
+            dest_header = HTTP_RESPONSE_HEADER_200_OK;
             
             // should post the length of the body here
             // since we don't support Chunked Transfer Encoding yet: http://en.wikipedia.org/wiki/Chunked_transfer_encoding
@@ -181,15 +203,39 @@
             
             
             [sock writeData:[dest_header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
+
+            // write the body part
             [sock writeData:body withTimeout:-1.0 tag:0];
+
+        } else {
+        
+            // no data found, so send an error
             
-            // if the client was a browser, we should close the socket here
-            if (isBrowser) {
-                [sock disconnectAfterWriting];
-                
-            }
+            // create header 404 Not Found header
+            dest_header = HTTP_RESPONSE_HEADER_404_ERROR;
+
+            // must close the header here with an empty line
+            dest_header = [dest_header stringByAppendingString:HTTP_RESPONSE_HEADER_CRLF];
+            
+            [sock writeData:[dest_header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
 
         }
+        
+        // if the client was a browser, we should close the socket here
+        if (isBrowser) {
+            
+            [sock disconnectAfterWriting];
+            
+        } else {
+        
+            //
+            // continue reading from the socket
+            //
+            NSData *term = [@"\r\n\r\n" dataUsingEncoding:NSASCIIStringEncoding];
+            [sock readDataToData:term withTimeout:-1 tag:0];
+
+        }
+
         
     }
     
