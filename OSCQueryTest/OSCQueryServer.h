@@ -19,25 +19,29 @@
     
     GCDAsyncSocket *socket;
     
+    // for bonjour/zeroconf
     NSNetService *netService;
     
-    // clients related
+    // clients
     NSMutableArray *clients;
 
+    // thread safety
     dispatch_queue_t queue;
     
+    //
     NSMutableDictionary *oscAddressSpace;
     NSString *rootOSCAddress;
 }
 
 @property (copy) NSString *name;
 
+// creates the server
 - (instancetype)initServerWithName:(NSString *)name onPort:(int)port withRootAddress:(NSString *)root;
 
-// create and address with the minimum configuration
+// creates an address with the minimum configuration
 - (void)addOSCAddress:(NSString *)address withDescription:(NSString *)description;
 
-
+// set values for addresses
 - (void)setType:(NSString *)type forAddress:(NSString *)address;
 - (void)setRangeWithMin:(NSNumber *)min max:(NSNumber *)max forAddress:(NSString *)address;
 

@@ -20,6 +20,8 @@
     int port;
     
     dispatch_queue_t queue;
+    
+    // store request for pipelining (not done yet)
     NSMutableArray *requests;
 }
 
@@ -29,6 +31,8 @@
 
 - (void)queryFullAddressSpace;
 - (void)queryAddress:(NSString *)address;
+
+
 - (void)disconnect;
 
 @end

@@ -27,7 +27,6 @@
     addressSpaceDict = [NSMutableDictionary new];
     fullPathesDict = [NSMutableDictionary new];
     
-    currentAction = nil;
     
     [[self serversTableView] setDoubleAction:@selector(serverSelected)];
     [[self addressSpaceTableView] setDoubleAction:@selector(addressSelected)];
@@ -278,7 +277,17 @@
 
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict {
     
-    [self writeToLog:@"cannot resolve address..."];
+    [self writeToLog:@"cannot resolve address... \n"];
+}
+
+- (void)netServiceDidStop:(NSNetService *)sender {
+
+    //
+    // TODO: handle this
+    //
+    
+    [self writeToLog:@"good bye, server... :( \n"];
+
 }
 
 #pragma mark Logging
@@ -306,18 +315,18 @@
                 [fullPathesDict removeAllObjects];
             });
             
-            //    [addressSpaceDict setObject:[NSMutableDictionary new] forKey:@"/"];
-            //    [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:[addressSpaceDict objectForKey:@"/"]];
-            [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
+          //  [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
             
             //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
             //      NSLog(@"fullPathesDict: %@", fullPathesDict);
             
-            [[self addressSpaceTableView] reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[self addressSpaceTableView] reloadData];
+            });
 
         } else {
             
-            
+            // do nothing here yet, just logging out
         }
         
         
@@ -329,6 +338,8 @@
     
     [self writeToLog:[NSString stringWithFormat:@"Error %d for request: %@\n========================", error, request]];
 }
+
+#pragma mark Misc
 
 - (void)buildAddressSpaceDataWithDictionary:(NSDictionary *)srcDict toDictionary:(NSMutableDictionary *)targetDict {
     

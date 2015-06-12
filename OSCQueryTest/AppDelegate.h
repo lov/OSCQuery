@@ -27,13 +27,14 @@
     NSMutableDictionary *addressSpaceDict;
     NSMutableDictionary *fullPathesDict;
     
-    NSString *currentAction;
 }
 
 @property (weak) IBOutlet NSTableView *serversTableView;
 @property (weak) IBOutlet NSTableView *addressSpaceTableView;
 @property (unsafe_unretained) IBOutlet NSTextView *logView;
 
+// manual request
 - (IBAction)requestData:(id)sender;
+
 @end
 
