@@ -32,6 +32,5 @@ This class is used to parse a raw HTTP header and get the HTTP fields as well as
 
 ## 3rd party code
 
-* JSONKit: https://github.com/marcdown/JSONKit
 * CocoaAsyncSocket: https://github.com/robbiehanson/CocoaAsyncSocket
 
