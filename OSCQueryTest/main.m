@@ -1,6 +1,6 @@
 //
 //  main.m
-//  OSCQueryTest
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.

@@ -1,6 +1,6 @@
 //
-//  OSCQueryClient.h
-//  OSCQueryTest
+//  IMTOSCQueryClient.h
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
@@ -8,11 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "GCDAsyncSocket.h"
-#import "JSONKit.h"
-#import "OSCQueryHTTPHeader.h"
-#import "OSCQueryClientDelegate.h"
+#import "IMTOSCQueryHTTPHeader.h"
+#import "IMTOSCQueryClientDelegate.h"
 
-@interface OSCQueryClient : NSObject <GCDAsyncSocketDelegate> {
+@interface IMTOSCQueryClient : NSObject <GCDAsyncSocketDelegate> {
 
     GCDAsyncSocket *socket;
     
@@ -25,7 +24,7 @@
     NSMutableArray *requests;
 }
 
-@property (weak) id<OSCQueryClientDelegate> delegate;
+@property (weak) id<IMTOSCQueryClientDelegate> delegate;
 
 - (instancetype)initWithHost:(NSString *)host onPort:(int)port;
 

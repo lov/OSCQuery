@@ -1,14 +1,14 @@
 //
-//  OSCQueryHTTPHeader.h
-//  OSCQueryTest
+//  IMTOSCQueryHTTPHeader.h
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 11/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 #import <Foundation/Foundation.h>
-#import "OSCQueryDefinitions.h"
+#import "IMTOSCQueryDefinitions.h"
 
-@interface OSCQueryHTTPHeader : NSObject {
+@interface IMTOSCQueryHTTPHeader : NSObject {
 
 }
 

@@ -1,16 +1,15 @@
 //
-//  OSCQueryServer.m
-//  OSCQueryTest
+//  IMTOSCQueryServer.m
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
-#import "OSCQueryServer.h"
-#import "JSONKit.h"
+#import "IMTOSCQueryServer.h"
 
 
-@implementation OSCQueryServer
+@implementation IMTOSCQueryServer
 
 - (instancetype)initServerWithName:(NSString *)name onPort:(int)port withRootAddress:(NSString *)root {
 
@@ -36,14 +35,14 @@
         
         clients = [NSMutableArray new];
         oscAddressSpace = [NSMutableDictionary new];
-        queue =  dispatch_queue_create("com.imimot.oscqueryserverqueue", DISPATCH_QUEUE_SERIAL);
+        queue =  dispatch_queue_create("com.imimot.IMTOSCQueryserverqueue", DISPATCH_QUEUE_SERIAL);
 
         [self setName:name];
         
         NSMutableDictionary *dict = [NSMutableDictionary new];
-        [dict setObject:[root copy] forKey:OSCQUERY_FULL_PATH];
-        [dict setObject:[ROOT_NODE_DESCRIPTION copy] forKey:OSCQUERY_DESCRIPTION];
-        [dict setObject:[NSMutableDictionary new] forKey:OSCQUERY_CONTENTS];
+        [dict setObject:[root copy] forKey:IMTOSCQuery_FULL_PATH];
+        [dict setObject:[ROOT_NODE_DESCRIPTION copy] forKey:IMTOSCQuery_DESCRIPTION];
+        [dict setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
         
         [oscAddressSpace setObject:dict forKey:root];
         rootOSCAddress = [root copy];
@@ -134,7 +133,7 @@
 
 - (void)handleRequestOnSocket:(GCDAsyncSocket *)sock withHeader:(NSString *)srcheader {
     
-    OSCQueryHTTPHeader *source_header = [OSCQueryHTTPHeader parseHeader:srcheader];
+    IMTOSCQueryHTTPHeader *source_header = [IMTOSCQueryHTTPHeader parseHeader:srcheader];
     
    // NSLog(@"request:%@ \n header fields: %@", [source_header requestPath], [source_header fields]);
     
@@ -178,14 +177,14 @@
             if (isBrowser) {
                 
                 dispatch_sync(queue, ^{
-                    body = [dict JSONDataWithOptions:JKSerializeOptionPretty error:NULL];
+                    body = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
                 });
                 
                 
             } else {
                 
                 dispatch_sync(queue, ^{
-                    body = [dict JSONData];
+                    body = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
                 });
                 
             }
@@ -270,7 +269,7 @@
     
     dispatch_sync(queue, ^{
 
-        NSMutableDictionary *lastContainer = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:OSCQUERY_CONTENTS];
+        NSMutableDictionary *lastContainer = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
         NSString *addressCache = @"";
         if (![rootOSCAddress isEqualToString:@"/"]) {
             addressCache = [rootOSCAddress copy];
@@ -292,20 +291,20 @@
                 if (!currentDict) {
                     
                     NSMutableDictionary *itemData = [NSMutableDictionary new];
-                    [itemData setObject:@"container" forKey:OSCQUERY_DESCRIPTION];
-                    [itemData setObject:[addressCache copy] forKey:OSCQUERY_FULL_PATH];
+                    [itemData setObject:@"container" forKey:IMTOSCQuery_DESCRIPTION];
+                    [itemData setObject:[addressCache copy] forKey:IMTOSCQuery_FULL_PATH];
                     
                     [lastContainer setObject:itemData forKey:current];
                     currentDict = [lastContainer objectForKey:current];
                 }
                 
-                NSMutableDictionary *currentContents = [currentDict objectForKey:OSCQUERY_CONTENTS];
+                NSMutableDictionary *currentContents = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
                 
                 // create the current CONTENTS dictionary if does not exists
                 if (!currentContents) {
                     
-                    [currentDict setObject:[NSMutableDictionary new] forKey:OSCQUERY_CONTENTS];
-                    currentContents = [currentDict objectForKey:OSCQUERY_CONTENTS];
+                    [currentDict setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
+                    currentContents = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
                     
                 }
                 
@@ -316,8 +315,8 @@
         
         // finally, construct and set the final address
         NSMutableDictionary *dict = [NSMutableDictionary new];
-        [dict setObject:[address copy] forKey:OSCQUERY_FULL_PATH];
-        [dict setObject:[description copy] forKey:OSCQUERY_DESCRIPTION];
+        [dict setObject:[address copy] forKey:IMTOSCQuery_FULL_PATH];
+        [dict setObject:[description copy] forKey:IMTOSCQuery_DESCRIPTION];
         [lastContainer setObject:dict forKey:[elements lastObject]];
 
     });
@@ -330,7 +329,7 @@
 
     NSMutableDictionary *ret = nil;
     
-    NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:OSCQUERY_CONTENTS];
+    NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
     
     NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
 
@@ -342,7 +341,7 @@
         
         if (!ret) {
             
-            ret = [[currentDict objectForKey:OSCQUERY_CONTENTS] objectForKey:current];
+            ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
         }
         
         currentDict = ret;
@@ -367,7 +366,7 @@
             
             // NSLog(@"targetDict: %@", targetDict);
             
-            [targetDict setObject:[type copy] forKey:OSCQUERY_TYPE];
+            [targetDict setObject:[type copy] forKey:IMTOSCQuery_TYPE];
             
             //NSLog(@"oscAddressSpace: %@", [oscAddressSpace JSONStringWithOptions:JKSerializeOptionPretty error:NULL]);
             
@@ -412,7 +411,7 @@
             // the third element should be null after min/max values here
             [range addObject:[NSNull null]];
             
-            [targetDict setObject:[range copy] forKey:OSCQUERY_RANGE];
+            [targetDict setObject:[range copy] forKey:IMTOSCQuery_RANGE];
             
             //NSLog(@"oscAddressSpace: %@", [oscAddressSpace JSONStringWithOptions:JKSerializeOptionPretty error:NULL]);
             

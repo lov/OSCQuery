@@ -1,16 +1,16 @@
 //
 //  Header.h
-//  OSCQueryTest
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
-#define OSCQUERY_FULL_PATH @"FULL_PATH"
-#define OSCQUERY_DESCRIPTION @"DESCRIPTION"
-#define OSCQUERY_CONTENTS @"CONTENTS"
-#define OSCQUERY_TYPE @"TYPE"
-#define OSCQUERY_RANGE @"RANGE"
+#define IMTOSCQuery_FULL_PATH @"FULL_PATH"
+#define IMTOSCQuery_DESCRIPTION @"DESCRIPTION"
+#define IMTOSCQuery_CONTENTS @"CONTENTS"
+#define IMTOSCQuery_TYPE @"TYPE"
+#define IMTOSCQuery_RANGE @"RANGE"
 
 // static description for the root node
 #define ROOT_NODE_DESCRIPTION @"root node"

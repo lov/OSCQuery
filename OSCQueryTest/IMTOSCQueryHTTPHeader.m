@@ -1,14 +1,14 @@
 //
-//  OSCQueryHTTPHeader.m
-//  OSCQueryTest
+//  IMTOSCQueryHTTPHeader.m
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 11/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
-#import "OSCQueryHTTPHeader.h"
+#import "IMTOSCQueryHTTPHeader.h"
 
-@implementation OSCQueryHTTPHeader
+@implementation IMTOSCQueryHTTPHeader
 
 - (instancetype)init {
     
@@ -27,7 +27,7 @@
 
 + (instancetype)parseHeader:(NSString *)header {
     
-    OSCQueryHTTPHeader *obj = [[OSCQueryHTTPHeader alloc] init];
+    IMTOSCQueryHTTPHeader *obj = [[IMTOSCQueryHTTPHeader alloc] init];
     
     NSMutableArray *lines = [[header componentsSeparatedByString:@"\r\n"] mutableCopy];
     

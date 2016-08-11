@@ -1,15 +1,15 @@
 //
-//  OSCQueryClient.m
-//  OSCQueryTest
+//  IMTOSCQueryClient.m
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
-#import "OSCQueryClient.h"
-#import "OSCQueryDefinitions.h"
+#import "IMTOSCQueryClient.h"
+#import "IMTOSCQueryDefinitions.h"
 
-@implementation OSCQueryClient
+@implementation IMTOSCQueryClient
 
 - (instancetype)initWithHost:(NSString *)_host onPort:(int)_port {
     
@@ -36,7 +36,7 @@
         }
         
         requests = [NSMutableArray new];
-        queue =  dispatch_queue_create("com.imimot.oscqueryclientqueue", DISPATCH_QUEUE_SERIAL);
+        queue =  dispatch_queue_create("com.imimot.IMTOSCQueryclientqueue", DISPATCH_QUEUE_SERIAL);
 
     }
     
@@ -73,7 +73,7 @@
     
     NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
-    OSCQueryHTTPHeader *header = [OSCQueryHTTPHeader parseHeader:dataString];
+    IMTOSCQueryHTTPHeader *header = [IMTOSCQueryHTTPHeader parseHeader:dataString];
     
   //  NSLog(@"dataString: %@", dataString);
     
@@ -128,7 +128,7 @@
             // you can even post the JSON towards if needed
             //
             
-            id dictFromJSON = [dataString objectFromJSONString];
+            id dictFromJSON = [NSJSONSerialization JSONObjectWithData:[dataString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
             
             if ([dictFromJSON isKindOfClass:[NSDictionary class]]) {
             

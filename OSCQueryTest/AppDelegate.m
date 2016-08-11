@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  OSCQueryTest
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
@@ -40,8 +40,8 @@
     [serviceBrowser setDelegate:self];
     [serviceBrowser searchForServicesOfType:@"_oscjson._tcp." inDomain:@""];
     
-    testServer1 = [[OSCQueryServer alloc] initServerWithName:@"TestQueryServer1" onPort:3333 withRootAddress:@"/"];
-    testServer2 = [[OSCQueryServer alloc] initServerWithName:@"TestQueryServer2" onPort:6000 withRootAddress:@"/"];
+    testServer1 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer1" onPort:3333 withRootAddress:@"/"];
+    testServer2 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer2" onPort:6000 withRootAddress:@"/"];
     
     [testServer1 addOSCAddress:@"/layer/position/x" withDescription:@"Layer Position on the X axis"];
     [testServer1 addOSCAddress:@"/layer/position/y" withDescription:@"Layer Position on the Y axis"];
@@ -258,7 +258,7 @@
             {
 
                 
-                client = [[OSCQueryClient alloc] initWithHost:[NSString stringWithUTF8String:addressStr] onPort:port];
+                client = [[IMTOSCQueryClient alloc] initWithHost:[NSString stringWithUTF8String:addressStr] onPort:port];
                 
                 if (client) {
                     
@@ -300,7 +300,7 @@
 }
 
 
-#pragma mark OSCQuery delegate
+#pragma mark IMTOSCQuery delegate
 
 - (void)replyReceived:(NSDictionary *)reply forRequest:(NSString *)request {
     
@@ -315,7 +315,7 @@
                 [fullPathesDict removeAllObjects];
             });
             
-          //  [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
+            [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
             
             //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
             //      NSLog(@"fullPathesDict: %@", fullPathesDict);
@@ -343,7 +343,7 @@
 
 - (void)buildAddressSpaceDataWithDictionary:(NSDictionary *)srcDict toDictionary:(NSMutableDictionary *)targetDict {
     
-    NSDictionary *start = [srcDict objectForKey:OSCQUERY_CONTENTS];
+    NSDictionary *start = [srcDict objectForKey:IMTOSCQuery_CONTENTS];
     
     if (start) {
         
@@ -360,7 +360,7 @@
     } else {
         
         dispatch_sync(serversQueue, ^{
-            [fullPathesDict setObject:srcDict forKey:[srcDict objectForKey:OSCQUERY_FULL_PATH]];
+            [fullPathesDict setObject:srcDict forKey:[srcDict objectForKey:IMTOSCQuery_FULL_PATH]];
         });
 
     }

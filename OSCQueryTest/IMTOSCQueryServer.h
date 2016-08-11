@@ -1,21 +1,21 @@
 //
-//  OSCQueryServer.h
-//  OSCQueryTest
+//  IMTOSCQueryServer.h
+//  IMTOSCQueryTest
 //
 //  Created by Tamas Nagy on 10/06/15.
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
 //
-// An OSCQueryServer instance should not be used from multiple threads at the same time
+// An IMTOSCQueryServer instance should not be used from multiple threads at the same time
 //
 //
 #import <Foundation/Foundation.h>
-#import "OSCQueryDefinitions.h"
+#import "IMTOSCQueryDefinitions.h"
 #import "GCDAsyncSocket.h"
-#import "OSCQueryHTTPHeader.h"
+#import "IMTOSCQueryHTTPHeader.h"
 
-@interface OSCQueryServer : NSObject <GCDAsyncSocketDelegate>  {
+@interface IMTOSCQueryServer : NSObject <GCDAsyncSocketDelegate>  {
     
     GCDAsyncSocket *socket;
     
