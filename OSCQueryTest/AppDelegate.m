@@ -46,12 +46,12 @@
     [testServer1 addOSCAddress:@"/layer/position/x" withDescription:@"Layer Position on the X axis"];
     [testServer1 addOSCAddress:@"/layer/position/y" withDescription:@"Layer Position on the Y axis"];
     [testServer1 addOSCAddress:@"/composition/rotate/z" withDescription:@"Composition Rotate on the Z axis"];
-    [testServer1 setType:OSC_TYPE_FLOAT forAddress:@"/layer/position/x"];
+    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/layer/position/x"];
     [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/x"];
     [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/y"];
     
     [testServer2 addOSCAddress:@"/1/fader" withDescription:@"Fader on Layer 1"];
-    [testServer1 setType:OSC_TYPE_FLOAT forAddress:@"/1/fader"];
+    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/fader"];
     [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/1/fader"];
 
     /*
@@ -315,7 +315,8 @@
                 [fullPathesDict removeAllObjects];
             });
             
-            [self buildAddressSpaceDataWithDictionary:[data objectForKey:@"/"] toDictionary:addressSpaceDict];
+            // the root should be always one element, so [[data allKeys] firstObject] should be the root addressewq
+            [self buildAddressSpaceDataWithDictionary:[data objectForKey:[[data allKeys] firstObject]] toDictionary:addressSpaceDict];
             
             //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
             //      NSLog(@"fullPathesDict: %@", fullPathesDict);

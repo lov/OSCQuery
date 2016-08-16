@@ -29,6 +29,8 @@
     
         socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
         
+        serverport = port;
+        
         NSError *error = nil;
         if (![socket acceptOnPort:port error:&error])
         {
@@ -68,7 +70,50 @@
     return self;
 }
 
-- (void)dealloc {
+- (void)stop {
+    
+    if (netService) {
+        
+        [netService stop];
+    }
+    
+    if (socket) {
+        
+        [socket disconnect];
+        
+    }
+    
+    if (clients) {
+        
+        [clients removeAllObjects];
+    }
+
+}
+
+- (void)restart {
+
+    if (netService) {
+        
+        [netService publish];
+    }
+    
+    if (socket) {
+        
+        NSError *error = nil;
+        if (![socket acceptOnPort:serverport error:&error])
+        {
+            NSLog(@"cannot restart: %@", error);
+            
+            
+        }
+        
+    }
+
+    
+
+}
+
+- (void)removeResources {
     
     if (netService) {
         
@@ -87,6 +132,11 @@
         [clients removeAllObjects];
     }
 
+}
+
+- (void)dealloc {
+    
+    [self removeResources];
 }
 
 #pragma mark Socket stuff

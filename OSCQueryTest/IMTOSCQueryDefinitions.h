@@ -16,10 +16,11 @@
 #define ROOT_NODE_DESCRIPTION @"root node"
 
 // supported OSC types
-#define OSC_TYPE_INT @"i"
-#define OSC_TYPE_FLOAT @"f"
-#define OSC_TYPE_STRING @"s"
-#define OSC_TYPE_NIL @"N"
+#define IMTOSCQuery_TYPE_INT @"i"
+#define IMTOSCQuery_TYPE_FLOAT @"f"
+#define IMTOSCQuery_TYPE_STRING @"s"
+#define IMTOSCQuery_TYPE_NIL @"N"
+#define IMTOSCQuery_TYPE_COLOR @"r"
 
 
 #define HTTP_HEADER 0

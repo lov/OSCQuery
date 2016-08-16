@@ -17,6 +17,7 @@
 @interface IMTOSCQueryServer : NSObject   {
     
     GCDAsyncSocket *socket;
+    int serverport;
     
     // for bonjour/zeroconf
     NSNetService *netService;
@@ -26,6 +27,7 @@
 
     // thread safety
     dispatch_queue_t queue;
+    
     
     //
     NSMutableDictionary *oscAddressSpace;
@@ -44,4 +46,8 @@
 - (void)setType:(NSString *)type forAddress:(NSString *)address;
 - (void)setRangeWithMin:(NSNumber *)min max:(NSNumber *)max forAddress:(NSString *)address;
 
+- (void)stop;
+- (void)restart;
+
+- (void)removeResources;
 @end
