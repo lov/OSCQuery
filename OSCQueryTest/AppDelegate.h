@@ -10,6 +10,7 @@
 #import "IMTOSCQueryServer.h"
 #import "IMTOSCQueryClient.h"
 #import "IMTOSCQueryClientDelegate.h"
+#import "IMTOSCQueryDefinitions.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, IMTOSCQueryClientDelegate> {
     

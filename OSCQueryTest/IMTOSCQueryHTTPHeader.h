@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 #import <Foundation/Foundation.h>
-#import "IMTOSCQueryDefinitions.h"
 
 @interface IMTOSCQueryHTTPHeader : NSObject {
 

@@ -7,7 +7,13 @@
 //
 
 #import "IMTOSCQueryServer.h"
+#import "IMTOSCQueryDefinitions.h"
+#import "IMTOSCQueryHTTPHeader.h"
+#import "GCDAsyncSocket.h"
 
+@interface IMTOSCQueryServer() <GCDAsyncSocketDelegate>
+
+@end
 
 @implementation IMTOSCQueryServer
 

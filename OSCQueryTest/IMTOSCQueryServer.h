@@ -11,11 +11,10 @@
 //
 //
 #import <Foundation/Foundation.h>
-#import "IMTOSCQueryDefinitions.h"
-#import "GCDAsyncSocket.h"
-#import "IMTOSCQueryHTTPHeader.h"
 
-@interface IMTOSCQueryServer : NSObject <GCDAsyncSocketDelegate>  {
+@class GCDAsyncSocket;
+
+@interface IMTOSCQueryServer : NSObject   {
     
     GCDAsyncSocket *socket;
     

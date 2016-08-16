@@ -7,6 +7,7 @@
 //
 
 #import "IMTOSCQueryHTTPHeader.h"
+#import "IMTOSCQueryDefinitions.h"
 
 @implementation IMTOSCQueryHTTPHeader
 
