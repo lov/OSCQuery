@@ -42,6 +42,13 @@
 // creates an address with the minimum configuration
 - (void)addOSCAddress:(NSString *)address withDescription:(NSString *)description;
 
+// creates an address with settings
+- (void)addOSCAddress:(NSString *)address ofType:(NSString *)type inRangeWithMin:(NSNumber *)min max:(NSNumber *)max  withDescription:(NSString *)description;
+
+
+// removes the given address with all sub-commands
+- (void)removeOSCAddress:(NSString *)address;
+
 // set values for addresses
 - (void)setType:(NSString *)type forAddress:(NSString *)address;
 - (void)setRangeWithMin:(NSNumber *)min max:(NSNumber *)max forAddress:(NSString *)address;

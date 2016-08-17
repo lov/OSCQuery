@@ -233,9 +233,15 @@
             if (isBrowser) {
                 
                 dispatch_sync(queue, ^{
-                    body = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+                   
+                    // body = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+                    
+                    body = [[self htmlResponseWithDictionary:dict] dataUsingEncoding:NSUTF8StringEncoding];
                 });
                 
+                // create header 200 OK header
+                dest_header = HTTP_RESPONSE_HTML_HEADER_200_OK;
+
                 
             } else {
                 
@@ -243,10 +249,11 @@
                     body = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
                 });
                 
-            }
+                // create header 200 OK header
+                dest_header = HTTP_RESPONSE_JSON_HEADER_200_OK;
 
-            // create header 200 OK header
-            dest_header = HTTP_RESPONSE_HEADER_200_OK;
+            }
+            
             
             // should post the length of the body here
             // since we don't support Chunked Transfer Encoding yet: http://en.wikipedia.org/wiki/Chunked_transfer_encoding
@@ -296,6 +303,56 @@
     
 }
 
+- (NSString *)htmlResponseWithDictionary:(NSDictionary *)dict {
+
+    NSString *body = @"";
+    
+    for (NSString *current in [[dict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
+        
+        if ([current isEqualToString:IMTOSCQuery_FULL_PATH] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"container"]) {
+        
+            body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@", [dict objectForKey:current], [dict objectForKey:IMTOSCQuery_DESCRIPTION]]];
+            
+            if (![dict objectForKey:IMTOSCQuery_RANGE]) {
+                
+                body = [body stringByAppendingString:@" Does not require any value.<br />"];
+            
+            } else {
+                
+                NSString *type = @" a <i>float</i>";
+                
+                if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_INT]) {
+                    
+                    type = @" an <i>int</i>";
+                
+                } else {
+                
+                    if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_COLOR]) {
+                        
+                        type = @" a <i>color</i>";
+                    }
+                }
+            
+                body = [body stringByAppendingString:[NSString stringWithFormat:@" Required value is %@.",type]];
+                
+                body = [body stringByAppendingString:@"<br />"];
+            }
+            
+        } else {
+            
+            if ([[dict objectForKey:current] isKindOfClass:[NSDictionary class]]) {
+            
+                body = [body stringByAppendingString:[self htmlResponseWithDictionary:[dict objectForKey:current]]];
+
+            }
+            
+        }
+    }
+    
+    return body;
+    
+}
+
 #pragma mark Handling OSC addresses
 
 - (void)addOSCAddress:(NSString *)address withDescription:(NSString *)description {
@@ -334,7 +391,7 @@
         
         for (NSString *current in elements) {
             
-            addressCache = [[addressCache stringByAppendingString:@"/"] stringByAppendingString:current];
+            addressCache = [addressCache stringByAppendingString:current];
             
             // if this is not the last element, which should not be an OSC container
             // we consider all other parts of this address space are containers
@@ -379,6 +436,49 @@
 
     
  //   NSLog(@"oscAddressSpace: %@", [oscAddressSpace JSONStringWithOptions:JKSerializeOptionPretty error:NULL]);
+}
+
+- (void)addOSCAddress:(NSString *)address ofType:(NSString *)type inRangeWithMin:(NSNumber *)min max:(NSNumber *)max withDescription:(NSString *)description {
+    
+    [self addOSCAddress:address withDescription:description];
+    [self setType:type forAddress:address];
+    if (min && max) {
+        [self setRangeWithMin:min max:max forAddress:address];
+    }
+}
+
+- (void)removeOSCAddress:(NSString *)address {
+    
+    NSLog(@"removeOSCAddress: %@", address);
+    
+    NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
+    
+    NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
+
+    for (int i=0;i<[elements count]-1;i++) {
+        
+        currentDict = [currentDict objectForKey:[elements objectAtIndex:i]];
+    }
+    
+  //  NSLog(@"currentDict: %@", currentDict);
+    
+    // if this is not container...
+    if ([currentDict objectForKey:IMTOSCQuery_CONTENTS]) {
+
+        [[currentDict objectForKey:IMTOSCQuery_CONTENTS] removeObjectForKey:[elements lastObject]];
+
+    } else {
+    
+        // if it is a container, remove it
+        [currentDict removeObjectForKey:[elements lastObject]];
+
+    }
+    
+    
+    if ([currentDict objectForKey:IMTOSCQuery_CONTENTS] && [[currentDict objectForKey:IMTOSCQuery_CONTENTS] count] == 0) {
+    
+        [self removeOSCAddress:[address substringToIndex:[address length]-[[elements lastObject] length]-1]];
+    }
 }
 
 - (NSMutableDictionary *)dictionaryForAddress:(NSString *)address {

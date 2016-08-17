@@ -37,13 +37,15 @@
 #define HTTP_STATUS_TIMEOUT 408
 
 #define HTTP_CONTENT_TYPE_JSON @"application/json"
+#define HTTP_CONTENT_TYPE_HTML @"text/html"
 
 #define HTTP_SUPPORTED_VERSION @"HTTP/1.1"
 
 #define HTTP_NOLENGTH -1
 
 // static part of HTTP headers
-#define HTTP_RESPONSE_HEADER_200_OK @"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: keep-alive\r\n"
+#define HTTP_RESPONSE_JSON_HEADER_200_OK @"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: keep-alive\r\n"
+#define HTTP_RESPONSE_HTML_HEADER_200_OK @"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: keep-alive\r\n"
 
 #define HTTP_RESPONSE_HEADER_404_ERROR @"HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\nConnection: keep-alive\r\n"
 
