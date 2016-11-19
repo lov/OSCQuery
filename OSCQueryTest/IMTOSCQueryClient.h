@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GCDAsyncSocket.h"
 #import "IMTOSCQueryHTTPHeader.h"
 #import "IMTOSCQueryClientDelegate.h"
 
-@interface IMTOSCQueryClient : NSObject <GCDAsyncSocketDelegate> {
+@class GCDAsyncSocket;
+
+@interface IMTOSCQueryClient : NSObject  {
 
     GCDAsyncSocket *socket;
     
@@ -30,7 +31,6 @@
 
 - (void)queryFullAddressSpace;
 - (void)queryAddress:(NSString *)address;
-
 
 - (void)disconnect;
 

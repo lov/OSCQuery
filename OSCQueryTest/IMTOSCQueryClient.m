@@ -8,6 +8,13 @@
 
 #import "IMTOSCQueryClient.h"
 #import "IMTOSCQueryDefinitions.h"
+#import "GCDAsyncSocket.h"
+
+@interface IMTOSCQueryClient () <GCDAsyncSocketDelegate> {
+
+}
+
+@end
 
 @implementation IMTOSCQueryClient
 
@@ -37,6 +44,7 @@
         
         requests = [NSMutableArray new];
         queue =  dispatch_queue_create("com.imimot.IMTOSCQueryclientqueue", DISPATCH_QUEUE_SERIAL);
+        
 
     }
     

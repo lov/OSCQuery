@@ -236,7 +236,7 @@
                    
                     // body = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
                     
-                    body = [[self htmlResponseWithDictionary:dict] dataUsingEncoding:NSUTF8StringEncoding];
+                    body = [[[@"<body style='line-height:1.0em;'>" stringByAppendingString:[self htmlResponseWithDictionary:dict]] stringByAppendingString:@"</body>"] dataUsingEncoding:NSUTF8StringEncoding];
                 });
                 
                 // create header 200 OK header
@@ -307,29 +307,30 @@
 
     NSString *body = @"";
     
-    for (NSString *current in [[dict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
+    
+    for (NSString *current in [[dict allKeys] sortedArrayUsingSelector:@selector(localizedStandardCompare:)]) {
         
-        if ([current isEqualToString:IMTOSCQuery_FULL_PATH] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"container"]) {
+        // skip root node and containers
+        if ([current isEqualToString:IMTOSCQuery_FULL_PATH] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"container"] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"root node"]) {
         
-            body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@", [dict objectForKey:current], [dict objectForKey:IMTOSCQuery_DESCRIPTION]]];
+            body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@  ", [dict objectForKey:current], [dict objectForKey:IMTOSCQuery_DESCRIPTION]]];
             
-            if (![dict objectForKey:IMTOSCQuery_RANGE]) {
+            if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_NIL]) {
                 
-                body = [body stringByAppendingString:@" Does not require any value.<br />"];
+                body = [body stringByAppendingString:@" It does not require any value.<br />"];
             
             } else {
                 
-                NSString *type = @" a <i>float</i>";
+                NSString *type = [NSString stringWithFormat:@" a <i>float</i> (%.2f - %.2f)", [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] floatValue], [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:1] floatValue]];
                 
                 if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_INT]) {
                     
-                    type = @" an <i>int</i>";
-                
+                    type = [NSString stringWithFormat:@" an <i>int</i> (%ld - %ld)", [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] integerValue], [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:1] integerValue]];
                 } else {
                 
                     if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_COLOR]) {
                         
-                        type = @" a <i>color</i>";
+                        type = @" an <i> RGB color</i>";
                     }
                 }
             
@@ -342,7 +343,7 @@
             
             if ([[dict objectForKey:current] isKindOfClass:[NSDictionary class]]) {
             
-                body = [body stringByAppendingString:[self htmlResponseWithDictionary:[dict objectForKey:current]]];
+                body = [[body stringByAppendingString:[self htmlResponseWithDictionary:[dict objectForKey:current]]] stringByAppendingString:@"<br />"];
 
             }
             
@@ -449,7 +450,7 @@
 
 - (void)removeOSCAddress:(NSString *)address {
     
-    NSLog(@"removeOSCAddress: %@", address);
+   // NSLog(@"removeOSCAddress: %@", address);
     
     NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
     
