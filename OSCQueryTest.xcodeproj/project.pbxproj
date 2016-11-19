@@ -134,6 +134,8 @@
 				TargetAttributes = {
 					304F20611B27FC8D00995372 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 783MCE78HT;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -280,6 +282,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 783MCE78HT;
 				INFOPLIST_FILE = OSCQueryTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -292,6 +295,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 783MCE78HT;
 				INFOPLIST_FILE = OSCQueryTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
