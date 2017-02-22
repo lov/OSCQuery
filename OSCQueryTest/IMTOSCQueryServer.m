@@ -488,26 +488,36 @@
     
     NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
     
-    NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
-
-    for (NSString *current in elements) {
+   // NSLog(@"address: %@ (%ld) rootOSCAddress: %@ (%ld)", address, [address length], rootOSCAddress, [rootOSCAddress length]);
     
-      //  NSLog(@"current: %@", current);
-
-        ret = [currentDict objectForKey:current];
+    if ([address length]>=[rootOSCAddress length]) {
         
-        if (!ret) {
+        NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
+        
+       // NSLog(@"elements: %@", elements);
+        
+        for (NSString *current in elements) {
             
-            ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
+            //  NSLog(@"current: %@", current);
+            
+            ret = [currentDict objectForKey:current];
+            
+            if (!ret) {
+                
+                ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
+            }
+            
+            currentDict = ret;
+            
+            if (!ret) {
+                
+                break;
+            }
         }
         
-        currentDict = ret;
-        
-        if (!ret) {
-            
-            break;
-        }
     }
+    
+//    NSLog(@"return: %@", ret);
     
     return ret;
     
