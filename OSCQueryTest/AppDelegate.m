@@ -44,15 +44,18 @@
     testServer2 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer2" onPort:6000 withRootAddress:@"/"];
     
     [testServer1 addOSCAddress:@"/test/layer/position/x" withDescription:@"Layer Position on the X axis"];
-    [testServer1 addOSCAddress:@"/test/layer/position/y" withDescription:@"Layer Position on the Y axis"];
-    [testServer1 addOSCAddress:@"/test/composition/rotate/z" withDescription:@"Composition Rotate on the Z axis"];
     [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/layer/position/x"];
     [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/x"];
-    [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/y"];
+
+    //[testServer1 addOSCAddress:@"/test/layer/position/y" withDescription:@"Layer Position on the Y axis"];
+    //[testServer1 addOSCAddress:@"/test/composition/rotate/z" withDescription:@"Composition Rotate on the Z axis"];
+    //[testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/y"];
     
     [testServer2 addOSCAddress:@"/1/fader" withDescription:@"Fader on Layer 1"];
     [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/fader"];
     [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/1/fader"];
+    [testServer2 addOSCAddress:@"/1/opacity/fader" withDescription:@"Fader opacity on Layer 1"];
+    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/opacity/fader"];
 
     /*
     // measuring performance
@@ -315,8 +318,8 @@
                 [fullPathesDict removeAllObjects];
             });
             
-            // the root should be always one element, so [[data allKeys] firstObject] should be the root addressewq
-            [self buildAddressSpaceDataWithDictionary:[data objectForKey:[[data allKeys] firstObject]] toDictionary:addressSpaceDict];
+            // the root should be always one element, so [[data allKeys] firstObject] should be the root addresse
+            [self buildAddressSpaceDataWithDictionary:data toDictionary:addressSpaceDict];
             
             //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
             //      NSLog(@"fullPathesDict: %@", fullPathesDict);
@@ -359,6 +362,8 @@
         }
         
     } else {
+        
+       // NSLog(@"srcdict: %@", srcDict);
         
         dispatch_sync(serversQueue, ^{
             [fullPathesDict setObject:srcDict forKey:[srcDict objectForKey:IMTOSCQuery_FULL_PATH]];

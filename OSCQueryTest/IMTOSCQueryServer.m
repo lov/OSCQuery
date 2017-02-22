@@ -47,12 +47,10 @@
 
         [self setName:name];
         
-        NSMutableDictionary *dict = [NSMutableDictionary new];
-        [dict setObject:[root copy] forKey:IMTOSCQuery_FULL_PATH];
-        [dict setObject:[ROOT_NODE_DESCRIPTION copy] forKey:IMTOSCQuery_DESCRIPTION];
-        [dict setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
+        [oscAddressSpace setObject:[root copy] forKey:IMTOSCQuery_FULL_PATH];
+        [oscAddressSpace setObject:@"root node" forKey:IMTOSCQuery_DESCRIPTION];
+        [oscAddressSpace setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
         
-        [oscAddressSpace setObject:dict forKey:root];
         rootOSCAddress = [root copy];
         
         // support for ZeroConf
@@ -245,6 +243,7 @@
                 
             } else {
                 
+                
                 dispatch_sync(queue, ^{
                     body = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
                 });
@@ -379,33 +378,35 @@
     
     NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
     
-//    NSLog(@"elements: %@", elements);
+  //  NSLog(@"elements: %@", elements);
     
     dispatch_sync(queue, ^{
 
-        NSMutableDictionary *lastContainer = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
-        NSString *addressCache = @"";
-        if (![rootOSCAddress isEqualToString:@"/"]) {
-            addressCache = [rootOSCAddress copy];
-        }
+        NSMutableDictionary *lastContainer = [oscAddressSpace objectForKey:IMTOSCQuery_CONTENTS];
+        NSString *addressCache = [rootOSCAddress copy];
         
         
         for (NSString *current in elements) {
             
+            if (![current isEqualToString:@""] && ![addressCache isEqualToString:@"/"])
+            {
+                addressCache = [addressCache stringByAppendingString:@"/"];
+            }
+    
             addressCache = [addressCache stringByAppendingString:current];
             
             // if this is not the last element, which should not be an OSC container
             // we consider all other parts of this address space are containers
             // so create them if needed
-            if (![current isEqualToString:[elements lastObject]]) {
+            if (![current isEqualToString:[elements lastObject]] && ![current isEqualToString:@""]) {
                 
                 NSMutableDictionary *currentDict = [lastContainer objectForKey:current];
                 
-                // create the current element if does not exists
+                // create the current element if does not exist
                 if (!currentDict) {
                     
                     NSMutableDictionary *itemData = [NSMutableDictionary new];
-                    [itemData setObject:@"container" forKey:IMTOSCQuery_DESCRIPTION];
+                    [itemData setObject:[@"container" copy] forKey:IMTOSCQuery_DESCRIPTION];
                     [itemData setObject:[addressCache copy] forKey:IMTOSCQuery_FULL_PATH];
                     
                     [lastContainer setObject:itemData forKey:current];
@@ -433,10 +434,12 @@
         [dict setObject:[description copy] forKey:IMTOSCQuery_DESCRIPTION];
         [lastContainer setObject:dict forKey:[elements lastObject]];
 
+     //   NSLog(@"lastContainer: %@", lastContainer);
+        
     });
 
     
- //   NSLog(@"oscAddressSpace: %@", [oscAddressSpace JSONStringWithOptions:JKSerializeOptionPretty error:NULL]);
+   // NSLog(@"oscAddressSpace: %@", oscAddressSpace);
 }
 
 - (void)addOSCAddress:(NSString *)address ofType:(NSString *)type inRangeWithMin:(NSNumber *)min max:(NSNumber *)max withDescription:(NSString *)description {
@@ -486,35 +489,54 @@
 
     NSMutableDictionary *ret = nil;
     
-    NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
+    NSMutableDictionary *currentDict = oscAddressSpace;
     
    // NSLog(@"address: %@ (%ld) rootOSCAddress: %@ (%ld)", address, [address length], rootOSCAddress, [rootOSCAddress length]);
     
     if ([address length]>=[rootOSCAddress length]) {
         
-        NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
-        
-       // NSLog(@"elements: %@", elements);
-        
-        for (NSString *current in elements) {
+        if (![address isEqualToString:rootOSCAddress])
+        {
+            address = [address substringFromIndex:[rootOSCAddress length]];
             
-            //  NSLog(@"current: %@", current);
+            NSArray *elements = [address componentsSeparatedByString:@"/"];
             
-            ret = [currentDict objectForKey:current];
+            //   NSLog(@"elements: %@", elements);
             
-            if (!ret) {
+            for (NSString *current in elements) {
                 
-                ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
+                if (![current isEqualToString:@""])
+                {
+                    
+                    //   NSLog(@"current: %@", current);
+                    
+                    ret = [currentDict objectForKey:current];
+                    
+                    if (!ret) {
+                        
+                        ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
+                    }
+                    
+                    currentDict = ret;
+                    
+                    if (!ret) {
+                        
+                        break;
+                    }
+                    
+                } else {
+                    
+                    ret = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
+                    
+                }
+                
             }
             
-            currentDict = ret;
+        } else {
             
-            if (!ret) {
-                
-                break;
-            }
+            ret = currentDict;
         }
-        
+
     }
     
 //    NSLog(@"return: %@", ret);
