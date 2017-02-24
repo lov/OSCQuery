@@ -31,6 +31,12 @@
         
         NSError *error = nil;
 
+        requests = [NSMutableArray new];
+        queue =  dispatch_queue_create("com.imimot.IMTOSCQueryclientqueue", DISPATCH_QUEUE_SERIAL);
+
+        [requests addObject:[@"/" copy]];
+
+
         if (![socket connectToHost:host onPort:port error:&error])
         {
             NSLog(@"error when connecting to the host: %@", [error localizedDescription]);
@@ -42,8 +48,6 @@
             return nil;
         }
         
-        requests = [NSMutableArray new];
-        queue =  dispatch_queue_create("com.imimot.IMTOSCQueryclientqueue", DISPATCH_QUEUE_SERIAL);
         
 
     }
@@ -74,7 +78,11 @@
     
    // NSLog(@"cool, we just connected to the server!");
     
-    [self queryFullAddressSpace];
+    //
+    // once we connected to the socket, query the last cached request
+    // which should be / on start
+    //
+    [self queryAddress:[requests lastObject]];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
@@ -158,6 +166,17 @@
     
 }
 
+- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
+    
+  //  NSLog(@"didWriteDataWithTag");
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
+    
+//    NSLog(@"socketDidDisconnect: %@", [err localizedDescription]);
+
+}
+
 #pragma mark Query method
 
 - (void)queryFullAddressSpace {
@@ -180,26 +199,52 @@
 }
 
 - (void)queryAddress:(NSString *)address {
-
+    
     if (address) {
             
         // create our header
         NSString *header = [[HTTP_GET_HEADER stringByReplacingOccurrencesOfString:@"_%GETURL%_" withString:address] stringByReplacingOccurrencesOfString:@"_%HOST%_" withString:[NSString stringWithFormat:@"%@:%d", host, port]];
         
+
+       // NSLog(@"header: %@", header);
+        
         dispatch_sync(queue, ^{
             [requests addObject:[address copy]];
         });
-
-        // post the request
-        [socket writeData:[header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
         
-        // Now we tell the socket to read the full header for the http response.
-        // As per the http protocol, we know the header is terminated with two CRLF's (carriage return, line feed).
-        NSData *responseTerminatorData = [@"\r\n\r\n" dataUsingEncoding:NSASCIIStringEncoding];
-        [socket readDataToData:responseTerminatorData withTimeout:-1.0 tag:0];
+        if ([socket isConnected]) {
+            
+            // post the request
+            [socket writeData:[header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+            
+            // Now we tell the socket to read the full header for the http response.
+            // As per the http protocol, we know the header is terminated with two CRLF's (carriage return, line feed).
+            NSData *responseTerminatorData = [@"\r\n\r\n" dataUsingEncoding:NSASCIIStringEncoding];
+            [socket readDataToData:responseTerminatorData withTimeout:-1.0 tag:0];
+        
+        } else {
+        
+            NSError *error = nil;
+            
+            if (![socket connectToHost:host onPort:port error:&error]) {
+            
+                //
+                // OSCQuery servers should maintain persistent connections, but in case
+                // we are disconnected at this time for whatever reason, its time to try to reconnect
+                //
+                
+                [socket disconnect];
+                
+                NSLog(@"cannot reconnect to host: %@", [error localizedDescription]);
+            }
+            
+        }
+
 
     }
     
 }
+
+
 
 @end

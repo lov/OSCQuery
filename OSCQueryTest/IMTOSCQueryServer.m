@@ -23,6 +23,10 @@
     clients = nil;
     rootOSCAddress = nil;
     
+    //
+    // according to the specs, "root" should be always "/"!
+    //
+    
     if (!name || !root || [name length] == 0 || [root length] == 0) return nil;
     
     if (self = [super init]) {
@@ -173,7 +177,7 @@
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
-
+    
     //
     // socket disconnected, remove it from our references
     //
@@ -202,6 +206,8 @@
         //     which is cool especially if their OSC client does not support this OSC Query protocol
         //
         BOOL isBrowser = [source_header hasUserAgentField];
+        
+       // isBrowser = NO;
         
         NSString *dest_header = @"";
         
