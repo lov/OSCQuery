@@ -51,9 +51,9 @@
     //[testServer1 addOSCAddress:@"/test/composition/rotate/z" withDescription:@"Composition Rotate on the Z axis"];
     //[testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/y"];
     
-    [testServer2 addOSCAddress:@"/1/fader" withDescription:@"Fader on Layer 1"];
-    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/fader"];
-    [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/1/fader"];
+    [testServer1 addOSCAddress:@"/test/1/fader" withDescription:@"Fader on Layer 1"];
+    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/test/1/fader"];
+    [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/test/1/fader"];
     [testServer2 addOSCAddress:@"/1/opacity/fader" withDescription:@"Fader opacity on Layer 1"];
     [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/opacity/fader"];
 

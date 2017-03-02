@@ -583,30 +583,28 @@
             
             NSMutableArray *range = [NSMutableArray new];
             
+            NSMutableDictionary *temp = [NSMutableDictionary new];
+            
             if (min) {
                 
-                [range addObject:[min copy]];
-                
-            } else {
-                
-                [range addObject:[NSNull null]];
+                [temp setObject:[min copy] forKey:IMTOSCQuery_MIN];
                 
             }
             
             if (max) {
                 
-                [range addObject:[max copy]];
-                
-            } else {
-                
-                [range addObject:[NSNull null]];
+                [temp setObject:[max copy] forKey:IMTOSCQuery_MAX];
                 
             }
             
-            // the third element should be null after min/max values here
-            [range addObject:[NSNull null]];
+            if (min || max) {
             
-            [targetDict setObject:[range copy] forKey:IMTOSCQuery_RANGE];
+                [range addObject:temp];
+
+                [targetDict setObject:[range copy] forKey:IMTOSCQuery_RANGE];
+
+            }
+            
             
             //NSLog(@"oscAddressSpace: %@", [oscAddressSpace JSONStringWithOptions:JKSerializeOptionPretty error:NULL]);
             

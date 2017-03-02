@@ -11,6 +11,8 @@
 #define IMTOSCQuery_CONTENTS @"CONTENTS"
 #define IMTOSCQuery_TYPE @"TYPE"
 #define IMTOSCQuery_RANGE @"RANGE"
+#define IMTOSCQuery_MIN @"MIN"
+#define IMTOSCQuery_MAX @"MAX"
 
 // static description for the root node
 #define ROOT_NODE_DESCRIPTION @"root node"
