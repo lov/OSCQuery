@@ -326,19 +326,25 @@
             
             } else {
                 
-                NSString *type = [NSString stringWithFormat:@" a <i>float</i> (%.2f - %.2f)", [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] floatValue], [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:1] floatValue]];
+                NSString *type = @"undefined";
                 
-                if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_INT]) {
+                if ([[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MIN] && [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MAX]) {
+                
+                    type = [NSString stringWithFormat:@" a <i>float</i> (%.2f - %.2f)", [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MIN] floatValue], [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MAX] floatValue]];
                     
-                    type = [NSString stringWithFormat:@" an <i>int</i> (%ld - %ld)", [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] integerValue], [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:1] integerValue]];
-                } else {
-                
-                    if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_COLOR]) {
+                    if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_INT]) {
                         
-                        type = @" an <i> RGB color</i>";
+                        type = [NSString stringWithFormat:@" an <i>int</i> (%ld - %ld)", [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MIN] integerValue], [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MAX] integerValue]];
+                    } else {
+                        
+                        if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_COLOR]) {
+                            
+                            type = @" an <i> RGB color</i>";
+                        }
                     }
+
                 }
-            
+                
                 body = [body stringByAppendingString:[NSString stringWithFormat:@" Required value is %@.",type]];
                 
                 body = [body stringByAppendingString:@"<br />"];
