@@ -322,7 +322,7 @@
             
             if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_NIL]) {
                 
-                body = [body stringByAppendingString:@" It does not require any value.<br />"];
+                body = [body stringByAppendingString:@" It does not require any value. Also available as <b>UDP String</b> command.<br />"];
             
             } else {
                 
