@@ -25,8 +25,10 @@
     
     //
     // according to the specs, "root" should be always "/"!
+    // so we won't use the custom root anyway...
     //
-    
+    rootOSCAddress = @"/";
+
     if (!name || !root || [name length] == 0 || [root length] == 0) return nil;
     
     if (self = [super init]) {
@@ -54,8 +56,6 @@
         [oscAddressSpace setObject:[root copy] forKey:IMTOSCQuery_FULL_PATH];
         [oscAddressSpace setObject:@"root node" forKey:IMTOSCQuery_DESCRIPTION];
         [oscAddressSpace setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
-        
-        rootOSCAddress = [root copy];
         
         // support for ZeroConf
         netService = [[NSNetService alloc] initWithDomain:@"local."
@@ -206,8 +206,9 @@
         //     which is cool especially if their OSC client does not support this OSC Query protocol
         //
         BOOL isBrowser = [source_header hasUserAgentField];
-        
        // isBrowser = NO;
+        
+        BOOL wasError = NO;
         
         NSString *dest_header = @"";
         
@@ -222,14 +223,13 @@
             });
 
         } else {
-        
             
             dispatch_sync(queue, ^{
                 dict = [self dictionaryForAddress:[source_header requestPath]];
             });
 
-        
         }
+        
 
         
         if (dict) {
@@ -286,10 +286,11 @@
             
             [sock writeData:[dest_header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
 
+            wasError = YES;
         }
         
         // if the client was a browser, we should close the socket here
-        if (isBrowser) {
+        if (isBrowser || wasError) {
             
             [sock disconnectAfterWriting];
             
@@ -317,7 +318,7 @@
         
         // skip root node and containers
         if ([current isEqualToString:IMTOSCQuery_FULL_PATH] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"container"] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"root node"]) {
-        
+            
             body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@  ", [dict objectForKey:current], [dict objectForKey:IMTOSCQuery_DESCRIPTION]]];
             
             if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_NIL]) {
@@ -353,11 +354,14 @@
         } else {
             
             if ([[dict objectForKey:current] isKindOfClass:[NSDictionary class]]) {
-            
+                
                 body = [[body stringByAppendingString:[self htmlResponseWithDictionary:[dict objectForKey:current]]] stringByAppendingString:@"<br />"];
-
+                
+            } else {
+                
+                body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@  ", current, [dict objectForKey:current]]];
             }
-            
+
         }
     }
     
@@ -509,39 +513,47 @@
         
         if (![address isEqualToString:rootOSCAddress])
         {
+        
             address = [address substringFromIndex:[rootOSCAddress length]];
             
             NSArray *elements = [address componentsSeparatedByString:@"/"];
             
-            //   NSLog(@"elements: %@", elements);
-            
-            for (NSString *current in elements) {
+            if ([elements count] == 1 && [[elements firstObject] isEqualToString:IMTOSCQuery_REQUEST_HOSTINFO]) {
                 
-                if (![current isEqualToString:@""])
-                {
+                ret = [NSMutableDictionary new];
+                [ret setObject:[self name] forKey:IMTOSCQuery_HOSTINFO_NAME];
+                
+            } else {
+                
+                for (NSString *current in elements) {
                     
-                    //   NSLog(@"current: %@", current);
-                    
-                    ret = [currentDict objectForKey:current];
-                    
-                    if (!ret) {
+                    if (![current isEqualToString:@""])
+                    {
                         
-                        ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
-                    }
-                    
-                    currentDict = ret;
-                    
-                    if (!ret) {
+                        //   NSLog(@"current: %@", current);
                         
-                        break;
+                        ret = [currentDict objectForKey:current];
+                        
+                        if (!ret) {
+                            
+                            ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
+                        }
+                        
+                        currentDict = ret;
+                        
+                        if (!ret) {
+                            
+                            break;
+                        }
+                        
+                    } else {
+                        
+                        ret = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
+                        
                     }
-                    
-                } else {
-                    
-                    ret = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
                     
                 }
-                
+
             }
             
         } else {

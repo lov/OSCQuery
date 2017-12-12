@@ -307,6 +307,8 @@
 
 - (void)replyReceived:(NSDictionary *)reply forRequest:(NSString *)request {
     
+  //  NSLog(@"reply received");
+    
     NSDictionary *data = reply;
     
     if (data && request) {
@@ -331,6 +333,7 @@
         } else {
             
             // do nothing here yet, just logging out
+            
         }
         
         
@@ -349,7 +352,7 @@
     
     NSDictionary *start = [srcDict objectForKey:IMTOSCQuery_CONTENTS];
     
-    if (start) {
+    if (start && [[start allKeys] count]>1) {
         
         for (NSString *current in [start allKeys]) {
         

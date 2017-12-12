@@ -9,6 +9,7 @@
 #define IMTOSCQuery_FULL_PATH @"FULL_PATH"
 #define IMTOSCQuery_DESCRIPTION @"DESCRIPTION"
 #define IMTOSCQuery_CONTENTS @"CONTENTS"
+#define IMTOSCQuery_REQUEST_HOSTINFO @"?HOST_INFO"
 #define IMTOSCQuery_TYPE @"TYPE"
 #define IMTOSCQuery_RANGE @"RANGE"
 #define IMTOSCQuery_MIN @"MIN"
@@ -24,7 +25,10 @@
 #define IMTOSCQuery_TYPE_NIL @"N"
 #define IMTOSCQuery_TYPE_COLOR @"r"
 
+//HOSTINFO
+#define IMTOSCQuery_HOSTINFO_NAME @"NAME"
 
+// HTTP parts
 #define HTTP_HEADER 0
 #define HTTP_BODY 10
 #define HTTP_REQUEST_GET 20
