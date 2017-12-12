@@ -357,7 +357,7 @@
                 
                 body = [[body stringByAppendingString:[self htmlResponseWithDictionary:[dict objectForKey:current]]] stringByAppendingString:@"<br />"];
                 
-            } else {
+            } else if ([current isEqualToString:IMTOSCQuery_HOSTINFO_NAME]) {
                 
                 body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@  ", current, [dict objectForKey:current]]];
             }
