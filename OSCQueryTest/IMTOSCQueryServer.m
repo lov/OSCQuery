@@ -513,12 +513,22 @@
         
         if (![address isEqualToString:rootOSCAddress])
         {
-        
+            
             address = [address substringFromIndex:[rootOSCAddress length]];
+
+            NSString *queryparam = nil;
+            
+            if ([address rangeOfString:@"?"].location != NSNotFound) {
+                
+                queryparam  = [[[address componentsSeparatedByString:@"?"] lastObject] copy];
+                
+                address = [address stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"?%@", queryparam] withString:@""];
+            }
+
             
             NSArray *elements = [address componentsSeparatedByString:@"/"];
             
-            if ([elements count] == 1 && [[elements firstObject] isEqualToString:IMTOSCQuery_REQUEST_HOSTINFO]) {
+            if ([queryparam isEqualToString:IMTOSCQuery_REQUEST_HOSTINFO]) {
                 
                 ret = [NSMutableDictionary new];
                 [ret setObject:[self name] forKey:IMTOSCQuery_HOSTINFO_NAME];
@@ -552,6 +562,34 @@
                         
                     }
                     
+                }
+                
+                if (ret && queryparam) {
+                    
+                    if ([queryparam isEqualToString:IMTOSCQuery_REQUEST_VALUE]) {
+                        
+                        //
+                        // we always respond with an EMPTY JSON object here
+                        // TODO: support this!
+                        //
+                        ret = [[NSMutableDictionary dictionary] copy];
+
+                    } else if ([ret objectForKey:queryparam]) {
+                        
+                        //
+                        // respond to the query here
+                        //
+                        ret = [NSMutableDictionary dictionaryWithObject:[[ret objectForKey:queryparam] copy] forKey:queryparam];
+
+                    
+                    } else {
+                        
+                        //
+                        // this will generate a 404 error
+                        //
+                        ret = nil;
+                    }
+                
                 }
 
             }
