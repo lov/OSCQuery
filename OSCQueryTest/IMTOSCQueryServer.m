@@ -344,6 +344,10 @@
                         }
                     }
 
+                } else if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_STRING]) {
+                    
+                    type = @" a <i> string</i>";
+
                 }
                 
                 body = [body stringByAppendingString:[NSString stringWithFormat:@" Required value is %@.",type]];
