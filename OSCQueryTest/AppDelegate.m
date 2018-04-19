@@ -40,22 +40,23 @@
     [serviceBrowser setDelegate:self];
     [serviceBrowser searchForServicesOfType:@"_oscjson._tcp." inDomain:@""];
     
-    testServer1 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer1" onPort:3333 withRootAddress:@"/test"];
-    testServer2 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer2" onPort:6000 withRootAddress:@"/"];
+    testServer1 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer1" onPort:3333 withRootAddress:@"/"];
+    testServer2 = [[IMTOSCQueryServer alloc] initServerWithName:@"TestQueryServer2" onPort:6000 withRootAddress:@"/test"];
     
-    [testServer1 addOSCAddress:@"/test/layer/position/x" withDescription:@"Layer Position on the X axis"];
-    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/layer/position/x"];
-    [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/x"];
+   // [testServer1 addOSCAddress:@"/test/layer/position/x" withDescription:@"Layer Position on the X axis"];
+   // [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/layer/position/x"];
+   // [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/x"];
 
     //[testServer1 addOSCAddress:@"/test/layer/position/y" withDescription:@"Layer Position on the Y axis"];
     //[testServer1 addOSCAddress:@"/test/composition/rotate/z" withDescription:@"Composition Rotate on the Z axis"];
     //[testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/layer/position/y"];
     
-    [testServer1 addOSCAddress:@"/test/1/fader" withDescription:@"Fader on Layer 1"];
-    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/test/1/fader"];
-    [testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/test/1/fader"];
+    [testServer1 addOSCAddress:@"/ping" withDescription:@"Ping"];
     [testServer2 addOSCAddress:@"/1/opacity/fader" withDescription:@"Fader opacity on Layer 1"];
-    [testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/opacity/fader"];
+    //[testServer1 addOSCAddress:@"/test/1/fader" withDescription:@"Fader on Layer 1"];
+    //[testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/test/1/fader"];
+    //[testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/test/1/fader"];
+    //[testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/1/opacity/fader"];
 
     /*
     // measuring performance
@@ -307,7 +308,7 @@
 
 - (void)replyReceived:(NSDictionary *)reply forRequest:(NSString *)request {
     
-  //  NSLog(@"reply received");
+   // NSLog(@"reply received: %@", reply);
     
     NSDictionary *data = reply;
     
@@ -320,10 +321,12 @@
                 [fullPathesDict removeAllObjects];
             });
             
+                  NSLog(@"buildAddressSpaceDataWithDictionary: %@", data);
+
             // the root should be always one element, so [[data allKeys] firstObject] should be the root addresse
             [self buildAddressSpaceDataWithDictionary:data toDictionary:addressSpaceDict];
             
-            //  NSLog(@"addressSpaceDict: %@", addressSpaceDict);
+             // NSLog(@"addressSpaceDict: %@", addressSpaceDict);
             //      NSLog(@"fullPathesDict: %@", fullPathesDict);
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -350,7 +353,25 @@
 
 - (void)buildAddressSpaceDataWithDictionary:(NSDictionary *)srcDict toDictionary:(NSMutableDictionary *)targetDict {
     
+    /*
+    if ([srcDict isKindOfClass:[NSArray class]]) {
+        
+        [self buildAddressSpaceDataWithDictionary:[(NSArray *)srcDict firstObject] toDictionary:targetDict];
+        
+        return;
+        
+    }
+    */
     NSDictionary *start = [srcDict objectForKey:IMTOSCQuery_CONTENTS];
+
+    
+    if ([start isKindOfClass:[NSArray class]]) {
+        
+        start = [(NSArray *)start firstObject];
+        
+       // NSLog(@"start: %@", [start className]);
+
+    }
     
     if (start && [[start allKeys] count]>1) {
         
@@ -359,7 +380,7 @@
             dispatch_sync(serversQueue, ^{
                 [targetDict setObject:[NSMutableDictionary new] forKey:current];
             });
-
+            
             
             [self buildAddressSpaceDataWithDictionary:[start objectForKey:current] toDictionary:[targetDict objectForKey:current]];
         }
