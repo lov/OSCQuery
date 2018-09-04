@@ -17,7 +17,7 @@
 @interface IMTOSCQueryServer : NSObject   {
     
     GCDAsyncSocket *socket;
-    int serverport;
+    int _serverport;
     
     // for bonjour/zeroconf
     NSNetService *netService;

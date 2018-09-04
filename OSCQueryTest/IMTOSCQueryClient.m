@@ -29,6 +29,8 @@
         socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
         [socket setDelegate:self];
         
+       // [socket setIPv6Enabled:NO];
+        
         NSError *error = nil;
 
         requests = [NSMutableArray new];
@@ -173,7 +175,7 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     
-//    NSLog(@"socketDidDisconnect: %@", [err localizedDescription]);
+    NSLog(@"socketDidDisconnect: %@", [err localizedDescription]);
 
 }
 

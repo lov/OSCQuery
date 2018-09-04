@@ -35,7 +35,7 @@
     
         socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
         
-        serverport = port;
+        _serverport = port;
         
         NSError *error = nil;
         if (![socket acceptOnPort:port error:&error])
@@ -62,6 +62,9 @@
                                                      type:@"_oscjson._tcp."
                                                      name:[NSString stringWithFormat:@"%@:%d", [self name], port]
                                                      port:port];
+        
+      //  NSLog(@"host: %@", [socket connectedHost]);
+      //  NSLog(@"localhost: %@", [socket localHost]);
         
         if (netService) {
             [netService publish];
@@ -102,7 +105,7 @@
     if (socket) {
         
         NSError *error = nil;
-        if (![socket acceptOnPort:serverport error:&error])
+        if (![socket acceptOnPort:_serverport error:&error])
         {
             NSLog(@"cannot restart: %@", error);
             
@@ -536,6 +539,11 @@
                 
                 ret = [NSMutableDictionary new];
                 [ret setObject:[self name] forKey:IMTOSCQuery_HOSTINFO_NAME];
+                if ([socket connectedHost]) {
+                    [ret setObject:[socket connectedHost] forKey:IMTOSCQuery_HOSTINFO_IP];
+                }
+                [ret setObject:[NSNumber numberWithInt:_serverport] forKey:IMTOSCQuery_HOSTINFO_PORT];
+
                 
             } else {
                 

@@ -29,6 +29,8 @@
 
 //HOSTINFO
 #define IMTOSCQuery_HOSTINFO_NAME @"NAME"
+#define IMTOSCQuery_HOSTINFO_IP @"OSC_IP"
+#define IMTOSCQuery_HOSTINFO_PORT @"OSC_PORT"
 
 // HTTP parts
 #define HTTP_HEADER 0

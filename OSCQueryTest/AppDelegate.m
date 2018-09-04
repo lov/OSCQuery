@@ -231,7 +231,7 @@
 
 - (void)netServiceDidResolveAddress:(NSNetService *)sender {
 
-  //  NSLog(@"netServiceDidResolveAddress...");
+    NSLog(@"netServiceDidResolveAddress...");
     
     // code part from http://stackoverflow.com/questions/938521/iphone-bonjour-nsnetservice-ip-address-and-port/4976808#4976808
     char addressBuffer[INET6_ADDRSTRLEN];
@@ -272,9 +272,23 @@
                     
                     
                     return;
+                    
+                } else {
+                    
+                    [self writeToLog:[NSString stringWithFormat:@"client is nil"]];
+
                 }
                  
+            } else {
+                
+                [self writeToLog:[NSString stringWithFormat:@"addressStr && port is false"]];
+                
+
             }
+        } else {
+            
+            [self writeToLog:[NSString stringWithFormat:@"socketAddress problem"]];
+
         }
     }
 }
