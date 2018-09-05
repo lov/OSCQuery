@@ -322,7 +322,7 @@
 
 - (void)replyReceived:(NSDictionary *)reply forRequest:(NSString *)request {
     
-   // NSLog(@"reply received: %@", reply);
+   // NSLog(@"reply received: %@ forRequest: %@", reply, request);
     
     NSDictionary *data = reply;
     
@@ -335,7 +335,7 @@
                 [fullPathesDict removeAllObjects];
             });
             
-                  NSLog(@"buildAddressSpaceDataWithDictionary: %@", data);
+                //  NSLog(@"buildAddressSpaceDataWithDictionary: %@", data);
 
             // the root should be always one element, so [[data allKeys] firstObject] should be the root addresse
             [self buildAddressSpaceDataWithDictionary:data toDictionary:addressSpaceDict];

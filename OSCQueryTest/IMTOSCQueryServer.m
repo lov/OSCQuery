@@ -257,6 +257,7 @@
                     body = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
                 });
                 
+
                 // create header 200 OK header
                 dest_header = HTTP_RESPONSE_JSON_HEADER_200_OK;
 
@@ -276,6 +277,8 @@
 
             // write the body part
             [sock writeData:body withTimeout:-1.0 tag:0];
+
+            // NSLog(@"body: %@" ,body);
 
         } else {
         
@@ -514,7 +517,7 @@
     
     NSMutableDictionary *currentDict = oscAddressSpace;
     
-   // NSLog(@"address: %@ (%ld) rootOSCAddress: %@ (%ld)", address, [address length], rootOSCAddress, [rootOSCAddress length]);
+  //  NSLog(@"address: %@ (%ld) rootOSCAddress: %@ (%ld)", address, [address length], rootOSCAddress, [rootOSCAddress length]);
     
     if ([address length]>=[rootOSCAddress length]) {
         
@@ -529,81 +532,86 @@
                 
                 queryparam  = [[[address componentsSeparatedByString:@"?"] lastObject] copy];
                 
-                address = [address stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"?%@", queryparam] withString:@""];
+                if ([queryparam isEqualToString:IMTOSCQuery_REQUEST_HOSTINFO]) {
+                    
+                    ret = [NSMutableDictionary new];
+                    [ret setObject:[self name] forKey:IMTOSCQuery_HOSTINFO_NAME];
+                    if ([socket connectedHost]) {
+                        [ret setObject:[socket connectedHost] forKey:IMTOSCQuery_HOSTINFO_IP];
+                    }
+                    [ret setObject:[NSNumber numberWithInt:_serverport] forKey:IMTOSCQuery_HOSTINFO_PORT];
+                    
+                    return ret;
+                    
+                } else {
+                    
+                    address = [address stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"?%@", queryparam] withString:@""];
+                    
+                }
+
+                
+
             }
+            
 
             
             NSArray *elements = [address componentsSeparatedByString:@"/"];
             
-            if ([queryparam isEqualToString:IMTOSCQuery_REQUEST_HOSTINFO]) {
+            for (NSString *current in elements) {
                 
-                ret = [NSMutableDictionary new];
-                [ret setObject:[self name] forKey:IMTOSCQuery_HOSTINFO_NAME];
-                if ([socket connectedHost]) {
-                    [ret setObject:[socket connectedHost] forKey:IMTOSCQuery_HOSTINFO_IP];
-                }
-                [ret setObject:[NSNumber numberWithInt:_serverport] forKey:IMTOSCQuery_HOSTINFO_PORT];
-
-                
-            } else {
-                
-                for (NSString *current in elements) {
+                if (![current isEqualToString:@""])
+                {
                     
-                    if (![current isEqualToString:@""])
-                    {
+                    //   NSLog(@"current: %@", current);
+                    
+                    ret = [currentDict objectForKey:current];
+                    
+                    if (!ret) {
                         
-                        //   NSLog(@"current: %@", current);
-                        
-                        ret = [currentDict objectForKey:current];
-                        
-                        if (!ret) {
-                            
-                            ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
-                        }
-                        
-                        currentDict = ret;
-                        
-                        if (!ret) {
-                            
-                            break;
-                        }
-                        
-                    } else {
-                        
-                        ret = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
-                        
+                        ret = [[currentDict objectForKey:IMTOSCQuery_CONTENTS] objectForKey:current];
                     }
                     
-                }
-                
-                if (ret && queryparam) {
+                    currentDict = ret;
                     
-                    if ([queryparam isEqualToString:IMTOSCQuery_REQUEST_VALUE]) {
+                    if (!ret) {
                         
-                        //
-                        // we always respond with an EMPTY JSON object here
-                        // TODO: support this!
-                        //
-                        ret = [[NSMutableDictionary dictionary] copy];
-
-                    } else if ([ret objectForKey:queryparam]) {
-                        
-                        //
-                        // respond to the query here
-                        //
-                        ret = [NSMutableDictionary dictionaryWithObject:[[ret objectForKey:queryparam] copy] forKey:queryparam];
-
-                    
-                    } else {
-                        
-                        //
-                        // this will generate a 404 error
-                        //
-                        ret = nil;
+                        break;
                     }
-                
+                    
+                } else {
+                    
+                    ret = [currentDict objectForKey:IMTOSCQuery_CONTENTS];
+                    
                 }
-
+                
+            }
+            
+            if (ret && queryparam) {
+                
+                if ([queryparam isEqualToString:IMTOSCQuery_REQUEST_VALUE]) {
+                    
+                    //
+                    // we always respond with an EMPTY JSON object here
+                    // TODO: support this!
+                    //
+                    ret = [[NSMutableDictionary dictionary] copy];
+                    
+                } else if ([ret objectForKey:queryparam]) {
+                    
+                    //
+                    // respond to the query here
+                    //
+                    ret = [NSMutableDictionary dictionaryWithObject:[[ret objectForKey:queryparam] copy] forKey:queryparam];
+                    
+                    
+                } else {
+                    
+                    //
+                    // this will generate a 404 error
+                    //
+                    ret = nil;
+                }
+                
             }
             
         } else {

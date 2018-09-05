@@ -36,9 +36,6 @@
         requests = [NSMutableArray new];
         queue =  dispatch_queue_create("com.imimot.IMTOSCQueryclientqueue", DISPATCH_QUEUE_SERIAL);
 
-        [requests addObject:[@"/" copy]];
-
-
         if (![socket connectToHost:host onPort:port error:&error])
         {
             NSLog(@"error when connecting to the host: %@", [error localizedDescription]);
@@ -84,7 +81,7 @@
     // once we connected to the socket, query the last cached request
     // which should be / on start
     //
-    [self queryAddress:[requests lastObject]];
+    [self queryAddress:@"/"];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
@@ -138,7 +135,7 @@
             // parsing of the header, which _probably_ means this is the body of a response
             //
 
-           // NSLog(@"body: %@", dataString);
+           // NSLog(@"body: %@", requests);
             
             //
             // reply received, make an NSDictionary from it and post a notification with the data
