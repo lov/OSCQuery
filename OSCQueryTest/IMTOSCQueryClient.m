@@ -81,7 +81,17 @@
     // once we connected to the socket, query the last cached request
     // which should be / on start
     //
-    [self queryAddress:@"/"];
+    
+    __block NSString *query = @"/";
+    
+    dispatch_sync(queue, ^{
+        if ([requests count]>0) {
+            query = [[requests firstObject] copy];
+            [requests removeObjectAtIndex:0];
+        }
+    });
+
+    [self queryAddress:query];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
@@ -180,21 +190,7 @@
 
 - (void)queryFullAddressSpace {
 
-    // create our header
-    NSString *header = [[HTTP_GET_HEADER stringByReplacingOccurrencesOfString:@"_%GETURL%_" withString:@"/"] stringByReplacingOccurrencesOfString:@"_%HOST%_" withString:[NSString stringWithFormat:@"%@:%d", host, port]];
-    
-    dispatch_sync(queue, ^{
-        [requests addObject:[@"/" copy]];
-    });
-    
-    // post a GET / request to ask about the whole address space
-    [socket writeData:[header dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
-    
-    // Now we tell the socket to read the full header for the http response.
-    // As per the http protocol, we know the header is terminated with two CRLF's (carriage return, line feed).
-    NSData *responseTerminatorData = [@"\r\n\r\n" dataUsingEncoding:NSASCIIStringEncoding];
-    [socket readDataToData:responseTerminatorData withTimeout:-1.0 tag:0];
-
+    [self queryAddress:@"/"];
 }
 
 - (void)queryAddress:(NSString *)address {
