@@ -479,9 +479,9 @@
 
 - (void)removeOSCAddress:(NSString *)address {
     
-   // NSLog(@"removeOSCAddress: %@", address);
+ //   NSLog(@"removeOSCAddress: %@", address);
     
-    NSMutableDictionary *currentDict = [[oscAddressSpace objectForKey:rootOSCAddress] objectForKey:IMTOSCQuery_CONTENTS];
+    NSMutableDictionary *currentDict = [oscAddressSpace objectForKey:IMTOSCQuery_CONTENTS];
     
     NSArray *elements = [[address substringFromIndex:[rootOSCAddress length]] componentsSeparatedByString:@"/"];
 
@@ -490,7 +490,7 @@
         currentDict = [currentDict objectForKey:[elements objectAtIndex:i]];
     }
     
-  //  NSLog(@"currentDict: %@", currentDict);
+ //   NSLog(@"currentDict: %@", currentDict);
     
     // if this is not container...
     if ([currentDict objectForKey:IMTOSCQuery_CONTENTS]) {
