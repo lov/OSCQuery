@@ -12,7 +12,7 @@
 #import "IMTOSCQueryClientDelegate.h"
 #import "IMTOSCQueryDefinitions.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, IMTOSCQueryClientDelegate> {
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, IMTOSCQueryClientDelegate, IMTOSCQueryHTMLContentProvider> {
     
     NSMutableArray *detectedServers;
     

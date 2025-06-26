@@ -11,8 +11,10 @@
 #import "IMTOSCQueryHTTPHeader.h"
 #import "GCDAsyncSocket.h"
 
-@interface IMTOSCQueryServer() <GCDAsyncSocketDelegate>
+@interface IMTOSCQueryServer() <GCDAsyncSocketDelegate> {
+    NSUInteger _tries;
 
+}
 @end
 
 @implementation IMTOSCQueryServer
@@ -22,6 +24,9 @@
     socket = nil;
     clients = nil;
     rootOSCAddress = nil;
+    _tries = 1;
+    netService = nil;
+    _htmlContentProvider = nil;
     
     //
     // according to the specs, "root" should be always "/"!
@@ -58,21 +63,36 @@
         [oscAddressSpace setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
         
         // support for ZeroConf
-        netService = [[NSNetService alloc] initWithDomain:@"local."
-                                                     type:@"_oscjson._tcp."
-                                                     name:[NSString stringWithFormat:@"%@:%d", [self name], port]
-                                                     port:port];
-        
+        [self initNetServiceWithName:[NSString stringWithFormat:@"%@:%d", [self name], port]];
       //  NSLog(@"host: %@", [socket connectedHost]);
       //  NSLog(@"localhost: %@", [socket localHost]);
         
-        if (netService) {
-            [netService publish];
-        }
+
 
     }
     
     return self;
+}
+
+- (void)initNetServiceWithName:(NSString *)servicename {
+    
+    if (netService) {
+        [netService stop];
+        [netService setDelegate:nil];
+        netService = nil;
+    }
+    
+    netService = [[NSNetService alloc] initWithDomain:@"local."
+                                                 type:@"_oscjson._tcp."
+                                                 name:servicename
+                                                 port:_serverport];
+    [netService setDelegate:self];
+    
+    if (netService) {
+        [netService publish];
+    }
+
+    
 }
 
 - (void)stop {
@@ -142,6 +162,22 @@
 - (void)dealloc {
     
     [self removeResources];
+}
+
+#pragma mark NSNetService Delegate
+
+
+- (void)netService:(NSNetService *)sender didNotPublish:(NSDictionary<NSString *,NSNumber *> *)errorDict {
+    
+       NSInteger errorCode = [errorDict[NSNetServicesErrorCode] integerValue];
+
+        NSLog(@"Service failed to publish with error: %ld", (long)errorCode);
+  
+    if (errorCode == NSNetServicesCollisionError) {
+        
+        [self initNetServiceWithName:[NSString stringWithFormat:@"%@:%d (%ld)", [self name], _serverport, ++_tries]];
+    }
+    
 }
 
 #pragma mark Socket stuff
@@ -237,13 +273,13 @@
         
         if (dict) {
         
-            if (isBrowser) {
+            if (isBrowser && self.htmlContentProvider) {
                 
                 dispatch_sync(queue, ^{
                    
                     // body = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
                     
-                    body = [[[@"<body style='line-height:1.0em;'>" stringByAppendingString:[self htmlResponseWithDictionary:dict]] stringByAppendingString:@"</body>"] dataUsingEncoding:NSUTF8StringEncoding];
+                    body = [self.htmlContentProvider htmlContentAsStringWithDictionary:dict];
                 });
                 
                 // create header 200 OK header
@@ -312,70 +348,6 @@
 
         
     }
-    
-}
-
-- (NSString *)htmlResponseWithDictionary:(NSDictionary *)dict {
-
-    NSString *body = @"";
-    
-    
-    for (NSString *current in [[dict allKeys] sortedArrayUsingSelector:@selector(localizedStandardCompare:)]) {
-        
-        // skip root node and containers
-        if ([current isEqualToString:IMTOSCQuery_FULL_PATH] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"container"] && ![[dict objectForKey:IMTOSCQuery_DESCRIPTION] isEqualToString:@"root node"]) {
-            
-            body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@  ", [dict objectForKey:current], [dict objectForKey:IMTOSCQuery_DESCRIPTION]]];
-            
-            if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_NIL]) {
-                
-                body = [body stringByAppendingString:@" It does not require any value. Also available as <b>UDP String</b> command.<br />"];
-            
-            } else {
-                
-                NSString *type = @"undefined";
-                
-                if ([[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MIN] && [[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MAX]) {
-                
-                    type = [NSString stringWithFormat:@" a <i>float</i> (%.2f - %.2f)", [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MIN] floatValue], [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MAX] floatValue]];
-                    
-                    if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_INT]) {
-                        
-                        type = [NSString stringWithFormat:@" an <i>int</i> (%ld - %ld)", [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MIN] integerValue], [[[[dict objectForKey:IMTOSCQuery_RANGE] objectAtIndex:0] objectForKey:IMTOSCQuery_MAX] integerValue]];
-                    } else {
-                        
-                        if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_COLOR]) {
-                            
-                            type = @" an <i> RGB color</i>";
-                        }
-                    }
-
-                } else if ([[dict objectForKey:IMTOSCQuery_TYPE] isEqualToString:IMTOSCQuery_TYPE_STRING]) {
-                    
-                    type = @" a <i> string</i>";
-
-                }
-                
-                body = [body stringByAppendingString:[NSString stringWithFormat:@" Required value is %@.",type]];
-                
-                body = [body stringByAppendingString:@"<br />"];
-            }
-            
-        } else {
-            
-            if ([[dict objectForKey:current] isKindOfClass:[NSDictionary class]]) {
-                
-                body = [[body stringByAppendingString:[self htmlResponseWithDictionary:[dict objectForKey:current]]] stringByAppendingString:@"<br />"];
-                
-            } else if ([current isEqualToString:IMTOSCQuery_HOSTINFO_NAME]) {
-                
-                body = [body stringByAppendingString:[NSString stringWithFormat:@"<strong>%@</strong>: %@  ", current, [dict objectForKey:current]]];
-            }
-
-        }
-    }
-    
-    return body;
     
 }
 

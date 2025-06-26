@@ -11,10 +11,11 @@
 //
 //
 #import <Foundation/Foundation.h>
+#import "IMTOSCQueryHTMLContentProvider.h"
 
 @class GCDAsyncSocket;
 
-@interface IMTOSCQueryServer : NSObject   {
+@interface IMTOSCQueryServer : NSObject <NSNetServiceDelegate>   {
     
     GCDAsyncSocket *socket;
     int _serverport;
@@ -35,6 +36,9 @@
 }
 
 @property (copy) NSString *name;
+
+// if a HMTL content provider is available, then this class will provide HTML data when the server is visited from a web browser (so when a User-Agent field is exist)
+@property (weak) id<IMTOSCQueryHTMLContentProvider> htmlContentProvider;
 
 // creates the server
 - (instancetype)initServerWithName:(NSString *)name onPort:(int)port withRootAddress:(NSString *)root;
