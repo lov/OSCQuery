@@ -279,7 +279,7 @@
                    
                     // body = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
                     
-                    body = [self.htmlContentProvider htmlContentAsStringWithDictionary:dict];
+                    body = [self.htmlContentProvider htmlContentAsDataWithDictionary:dict];
                 });
                 
                 // create header 200 OK header

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol IMTOSCQueryHTMLContentProvider <NSObject>
 
-- (NSString *)htmlContentAsStringWithDictionary:(NSDictionary *)dict;
+- (NSData *)htmlContentAsDataWithDictionary:(NSDictionary *)dict;
 
 @end
 
