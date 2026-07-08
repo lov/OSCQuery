@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "IMTOSCQueryHTTPHeader.h"
-#import "IMTOSCQueryClientDelegate.h"
+#import <IMTOSCKit/IMTOSCQueryHTTPHeader.h>
+#import <IMTOSCKit/IMTOSCQueryClientDelegate.h>
 
 @class GCDAsyncSocket;
 

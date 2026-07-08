@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
-#import "IMTOSCQueryServer.h"
-#import "IMTOSCQueryDefinitions.h"
-#import "IMTOSCQueryHTTPHeader.h"
+#import <IMTOSCKit/IMTOSCQueryServer.h>
+#import <IMTOSCKit/IMTOSCQueryDefinitions.h>
+#import <IMTOSCKit/IMTOSCQueryHTTPHeader.h>
 #import "GCDAsyncSocket.h"
 
 @interface IMTOSCQueryServer() <GCDAsyncSocketDelegate> {

@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Imimot Kft. All rights reserved.
 //
 
-#import "IMTOSCQueryHTTPHeader.h"
-#import "IMTOSCQueryDefinitions.h"
+#import <IMTOSCKit/IMTOSCQueryHTTPHeader.h>
+#import <IMTOSCKit/IMTOSCQueryDefinitions.h>
 
 @implementation IMTOSCQueryHTTPHeader
 
