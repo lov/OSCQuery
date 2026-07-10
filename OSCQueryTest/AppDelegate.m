@@ -428,7 +428,7 @@
 
 #pragma mark IMTOSCQueryHTMLContentProvider 
 
-- (NSString *)htmlContentAsDataWithDictionary:(NSDictionary *)dict {
+- (NSData *)htmlContentAsDataWithDictionary:(NSDictionary *)dict {
     
     return [[[@"<body style='line-height:1.0em;'>" stringByAppendingString:[self htmlResponseWithDictionary:dict]] stringByAppendingString:@"</body>"] dataUsingEncoding:NSUTF8StringEncoding];
 }
