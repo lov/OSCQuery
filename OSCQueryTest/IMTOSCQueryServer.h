@@ -11,7 +11,7 @@
 //
 //
 #import <Foundation/Foundation.h>
-#import "IMTOSCQueryHTMLContentProvider.h"
+#import <OSCQuery/IMTOSCQueryHTMLContentProvider.h>
 
 @class GCDAsyncSocket;
 
