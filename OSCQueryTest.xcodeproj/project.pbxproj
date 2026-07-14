@@ -15,7 +15,41 @@
 		304F20901B28061400995372 /* IMTOSCQueryServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F208F1B28061400995372 /* IMTOSCQueryServer.m */; };
 		304F20931B28196D00995372 /* IMTOSCQueryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F20921B28196D00995372 /* IMTOSCQueryClient.m */; };
 		304F20971B295DD800995372 /* IMTOSCQueryHTTPHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 304F20961B295DD800995372 /* IMTOSCQueryHTTPHeader.m */; };
+		30A000012E1D230100000001 /* OSCQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30A0000C2E1D230100000001 /* OSCQuery.framework */; };
+		30A000022E1D230100000001 /* OSCQuery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 30A0000C2E1D230100000001 /* OSCQuery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		30A000032E1D230100000001 /* OSCQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 30A0000B2E1D230100000001 /* OSCQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A000042E1D230100000001 /* IMTOSCQueryDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 304F20941B286F3000995372 /* IMTOSCQueryDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A000052E1D230100000001 /* IMTOSCQueryHTTPHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 304F20951B295DD800995372 /* IMTOSCQueryHTTPHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A000062E1D230100000001 /* IMTOSCQueryServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 304F208E1B28061400995372 /* IMTOSCQueryServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A000072E1D230100000001 /* IMTOSCQueryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 304F20911B28196D00995372 /* IMTOSCQueryClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A000082E1D230100000001 /* IMTOSCQueryClientDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 302100E91B2AA5D500514093 /* IMTOSCQueryClientDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A000092E1D230100000001 /* IMTOSCQueryHTMLContentProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 3015BF282E0D7E05007E397C /* IMTOSCQueryHTMLContentProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		30A0000A2E1D230100000001 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 304026651D5CFD3E00CC65D8 /* GCDAsyncSocket.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		30A000132E1D230100000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 304F205A1B27FC8D00995372 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 30A000112E1D230100000001;
+			remoteInfo = OSCQuery;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		30A0000D2E1D230100000001 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				30A000022E1D230100000001 /* OSCQuery.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3015BF282E0D7E05007E397C /* IMTOSCQueryHTMLContentProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMTOSCQueryHTMLContentProvider.h; sourceTree = "<group>"; };
@@ -36,10 +70,20 @@
 		304F20941B286F3000995372 /* IMTOSCQueryDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMTOSCQueryDefinitions.h; sourceTree = "<group>"; };
 		304F20951B295DD800995372 /* IMTOSCQueryHTTPHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMTOSCQueryHTTPHeader.h; sourceTree = "<group>"; };
 		304F20961B295DD800995372 /* IMTOSCQueryHTTPHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMTOSCQueryHTTPHeader.m; sourceTree = "<group>"; };
+		30A0000B2E1D230100000001 /* OSCQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCQuery.h; sourceTree = "<group>"; };
+		30A0000C2E1D230100000001 /* OSCQuery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OSCQuery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		304F205F1B27FC8D00995372 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30A000012E1D230100000001 /* OSCQuery.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30A0000E2E1D230100000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -61,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				304F20621B27FC8D00995372 /* OSCQueryTest.app */,
+				30A0000C2E1D230100000001 /* OSCQuery.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -68,6 +113,7 @@
 		304F20641B27FC8D00995372 /* OSCQueryTest */ = {
 			isa = PBXGroup;
 			children = (
+				30A0000B2E1D230100000001 /* OSCQuery.h */,
 				304F20941B286F3000995372 /* IMTOSCQueryDefinitions.h */,
 				304F20951B295DD800995372 /* IMTOSCQueryHTTPHeader.h */,
 				304F20961B295DD800995372 /* IMTOSCQueryHTTPHeader.m */,
@@ -115,15 +161,34 @@
 				304F205E1B27FC8D00995372 /* Sources */,
 				304F205F1B27FC8D00995372 /* Frameworks */,
 				304F20601B27FC8D00995372 /* Resources */,
+				30A0000D2E1D230100000001 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				30A000142E1D230100000001 /* PBXTargetDependency */,
 			);
 			name = OSCQueryTest;
 			productName = OSCQueryTest;
 			productReference = 304F20621B27FC8D00995372 /* OSCQueryTest.app */;
 			productType = "com.apple.product-type.application";
+		};
+		30A000112E1D230100000001 /* OSCQuery */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30A000122E1D230100000001 /* Build configuration list for PBXNativeTarget "OSCQuery" */;
+			buildPhases = (
+				30A0000F2E1D230100000001 /* Headers */,
+				30A000102E1D230100000001 /* Sources */,
+				30A0000E2E1D230100000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OSCQuery;
+			productName = OSCQuery;
+			productReference = 30A0000C2E1D230100000001 /* OSCQuery.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -138,6 +203,9 @@
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 783MCE78HT;
 						ProvisioningStyle = Manual;
+					};
+					30A000112E1D230100000001 = {
+						CreatedOnToolsVersion = 6.3.1;
 					};
 				};
 			};
@@ -156,6 +224,7 @@
 			projectRoot = "";
 			targets = (
 				304F20611B27FC8D00995372 /* OSCQueryTest */,
+				30A000112E1D230100000001 /* OSCQuery */,
 			);
 		};
 /* End PBXProject section */
@@ -172,21 +241,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXHeadersBuildPhase section */
+		30A0000F2E1D230100000001 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30A000032E1D230100000001 /* OSCQuery.h in Headers */,
+				30A000042E1D230100000001 /* IMTOSCQueryDefinitions.h in Headers */,
+				30A000052E1D230100000001 /* IMTOSCQueryHTTPHeader.h in Headers */,
+				30A000062E1D230100000001 /* IMTOSCQueryServer.h in Headers */,
+				30A000072E1D230100000001 /* IMTOSCQueryClient.h in Headers */,
+				30A000082E1D230100000001 /* IMTOSCQueryClientDelegate.h in Headers */,
+				30A000092E1D230100000001 /* IMTOSCQueryHTMLContentProvider.h in Headers */,
+				30A0000A2E1D230100000001 /* GCDAsyncSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		304F205E1B27FC8D00995372 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				304F20971B295DD800995372 /* IMTOSCQueryHTTPHeader.m in Sources */,
-				304F20901B28061400995372 /* IMTOSCQueryServer.m in Sources */,
 				304F206B1B27FC8D00995372 /* main.m in Sources */,
 				304F20691B27FC8D00995372 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30A000102E1D230100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				304F20971B295DD800995372 /* IMTOSCQueryHTTPHeader.m in Sources */,
+				304F20901B28061400995372 /* IMTOSCQueryServer.m in Sources */,
 				304F20931B28196D00995372 /* IMTOSCQueryClient.m in Sources */,
 				304026671D5CFD3E00CC65D8 /* GCDAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		30A000142E1D230100000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 30A000112E1D230100000001 /* OSCQuery */;
+			targetProxy = 30A000132E1D230100000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		304F206E1B27FC8D00995372 /* MainMenu.xib */ = {
@@ -305,6 +407,36 @@
 			};
 			name = Release;
 		};
+		30A000152E1D230100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "@rpath";
+				PRODUCT_BUNDLE_IDENTIFIER = com.imimot.OSCQuery;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		30A000162E1D230100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "@rpath";
+				PRODUCT_BUNDLE_IDENTIFIER = com.imimot.OSCQuery;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -322,6 +454,15 @@
 			buildConfigurations = (
 				304F20801B27FC8D00995372 /* Debug */,
 				304F20811B27FC8D00995372 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30A000122E1D230100000001 /* Build configuration list for PBXNativeTarget "OSCQuery" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30A000152E1D230100000001 /* Debug */,
+				30A000162E1D230100000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -3,6 +3,27 @@ A basic (and experimental) implementation of the OSC Query Proposal at https://g
 
 This repository implements an OSC Query Server and Client over TCP/HTTP 1.1, and a utility class for parsing HTTP headers.
 
+## Building
+
+Open `OSCQueryTest.xcodeproj` in Xcode and build the `OSCQuery` scheme to build the framework. The repository also includes the `OSCQueryTest` scheme, which builds the sample app against `OSCQuery.framework`.
+
+Command line builds:
+
+```bash
+xcodebuild build -project OSCQueryTest.xcodeproj -scheme OSCQuery -destination 'platform=macOS'
+xcodebuild build -project OSCQueryTest.xcodeproj -scheme OSCQueryTest -destination 'platform=macOS'
+```
+
+## Usage
+
+Apps can import the framework umbrella header:
+
+```objc
+#import <OSCQuery/OSCQuery.h>
+```
+
+The sample app links and embeds `OSCQuery.framework`. CocoaAsyncSocket's TCP `GCDAsyncSocket` source is vendored under `OSCQueryTest/Vendor/CocoaAsyncSocket/` and built by the framework target.
+
 ## OSCQueryServer
 
 * ZeroConf/Bonjour support
@@ -33,4 +54,3 @@ This class is used to parse a raw HTTP header and get the HTTP fields as well as
 ## 3rd party code
 
 * CocoaAsyncSocket: https://github.com/robbiehanson/CocoaAsyncSocket
-
