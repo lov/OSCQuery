@@ -7,10 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "IMTOSCQueryServer.h"
-#import "IMTOSCQueryClient.h"
-#import "IMTOSCQueryClientDelegate.h"
-#import "IMTOSCQueryDefinitions.h"
+#import <OSCQuery/OSCQuery.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, IMTOSCQueryClientDelegate, IMTOSCQueryHTMLContentProvider> {
     
@@ -38,4 +35,3 @@
 - (IBAction)requestData:(id)sender;
 
 @end
-
