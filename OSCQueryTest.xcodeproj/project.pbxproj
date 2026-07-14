@@ -20,8 +20,8 @@
 /* Begin PBXFileReference section */
 		3015BF282E0D7E05007E397C /* IMTOSCQueryHTMLContentProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMTOSCQueryHTMLContentProvider.h; sourceTree = "<group>"; };
 		302100E91B2AA5D500514093 /* IMTOSCQueryClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMTOSCQueryClientDelegate.h; sourceTree = "<group>"; };
-		304026651D5CFD3E00CC65D8 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = ../../../FrameWorks/_SRC/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
-		304026661D5CFD3E00CC65D8 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = ../../../FrameWorks/_SRC/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
+		304026651D5CFD3E00CC65D8 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = Vendor/CocoaAsyncSocket/GCDAsyncSocket.h; sourceTree = "<group>"; };
+		304026661D5CFD3E00CC65D8 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = Vendor/CocoaAsyncSocket/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		304F20621B27FC8D00995372 /* OSCQueryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSCQueryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		304F20661B27FC8D00995372 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		304F20671B27FC8D00995372 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
