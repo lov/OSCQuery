@@ -118,6 +118,19 @@
     [self publishNetService];
 }
 
+- (void)renameWithName:(NSString *)name
+        serviceNameProvider:(IMTOSCQueryServiceNameProvider)provider
+    publicationErrorHandler:(nullable IMTOSCQueryPublicationErrorHandler)errorHandler {
+    if (!socket) {
+        return;
+    }
+    self.name = name;
+    _serviceNameProvider = [provider copy];
+    _publicationErrorHandler = [errorHandler copy];
+    _tries = 1;
+    [self initNetServiceWithName:provider(_serverport, _tries)];
+}
+
 - (void)stop {
     _stopped = YES;
 

@@ -73,6 +73,17 @@ typedef void (^IMTOSCQueryPublicationErrorHandler)(NSError *error);
                         serviceNameProvider:(nullable IMTOSCQueryServiceNameProvider)provider
                     publicationErrorHandler:(nullable IMTOSCQueryPublicationErrorHandler)errorHandler;
 
+/// Updates HOST_INFO and republishes Bonjour while retaining the listener, clients and addresses.
+///
+/// Copies both blocks and resets the collision index to 1. Call on the server's owning thread.
+/// Every call republishes when running, even for the same name, so it can retry a failed
+/// advertisement. Renaming a stopped server prepares its next advertisement without starting
+/// it. After removeResources, this does nothing. Publication failure leaves the new name set
+/// and is reported through the optional handler.
+- (void)renameWithName:(NSString *)name
+        serviceNameProvider:(IMTOSCQueryServiceNameProvider)provider
+    publicationErrorHandler:(nullable IMTOSCQueryPublicationErrorHandler)errorHandler;
+
 // creates an address with the minimum configuration
 - (void)addOSCAddress:(NSString *)address withDescription:(nullable NSString *)description;
 
