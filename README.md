@@ -54,3 +54,11 @@ This class is used to parse a raw HTTP header and get the HTTP fields as well as
 ## 3rd party code
 
 * CocoaAsyncSocket: https://github.com/robbiehanson/CocoaAsyncSocket
+
+## Discovery naming
+
+Use the extended server initializer when the name returned by `HOST_INFO` should differ from the Bonjour advertisement. For example, the display name can remain a complete multilingual name while the advertisement uses a shorter label.
+
+`serviceNameProvider` returns the entire Bonjour label, including any port and collision suffix. The first attempt uses collision index 1; later collisions ask the provider for the next label. Budget the complete label within Bonjour's 63-byte UTF-8 limit. A nil provider keeps the original `name:port` label and automatic Bonjour renaming.
+
+`publicationErrorHandler` receives listener startup failures synchronously and Bonjour publication failures later on the publishing thread's run loop. Both blocks are copied. Use each server from one thread with a running run loop; use nil for the handler when no reporting is needed. Existing callers can continue using the original initializer.

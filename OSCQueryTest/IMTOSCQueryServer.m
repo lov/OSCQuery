@@ -13,14 +13,27 @@
 
 @interface IMTOSCQueryServer() <GCDAsyncSocketDelegate> {
     NSUInteger _tries;
-
+    BOOL _stopped;
+    IMTOSCQueryServiceNameProvider _serviceNameProvider;
+    IMTOSCQueryPublicationErrorHandler _publicationErrorHandler;
 }
 @end
 
 @implementation IMTOSCQueryServer
 
 - (instancetype)initServerWithName:(NSString *)name onPort:(int)port withRootAddress:(NSString *)root {
+    return [self initServerWithName:name
+                             onPort:port
+                    withRootAddress:root
+                serviceNameProvider:nil
+            publicationErrorHandler:nil];
+}
 
+- (instancetype)initServerWithName:(NSString *)name
+                            onPort:(int)port
+                   withRootAddress:(NSString *)root
+               serviceNameProvider:(nullable IMTOSCQueryServiceNameProvider)provider
+           publicationErrorHandler:(nullable IMTOSCQueryPublicationErrorHandler)errorHandler {
     socket = nil;
     clients = nil;
     rootOSCAddress = nil;
@@ -46,7 +59,10 @@
         if (![socket acceptOnPort:port error:&error])
         {
             NSLog(@"cannot start: %@", error);
-            
+            if (errorHandler) {
+                errorHandler(error);
+            }
+
             socket = nil;
             
             return nil;
@@ -56,6 +72,8 @@
         oscAddressSpace = [NSMutableDictionary new];
         queue =  dispatch_queue_create("com.imimot.IMTOSCQueryserverqueue", DISPATCH_QUEUE_SERIAL);
 
+        _serviceNameProvider = [provider copy];
+        _publicationErrorHandler = [errorHandler copy];
         [self setName:name];
         
         [oscAddressSpace setObject:[root copy] forKey:IMTOSCQuery_FULL_PATH];
@@ -63,15 +81,24 @@
         [oscAddressSpace setObject:[NSMutableDictionary new] forKey:IMTOSCQuery_CONTENTS];
         
         // support for ZeroConf
-        [self initNetServiceWithName:[NSString stringWithFormat:@"%@:%d", [self name], port]];
-      //  NSLog(@"host: %@", [socket connectedHost]);
-      //  NSLog(@"localhost: %@", [socket localHost]);
-        
-
-
+        [self initNetServiceWithName:provider ? provider(port, 1)
+                                              : [NSString stringWithFormat:@"%@:%d", [self name], port]];
+        //  NSLog(@"host: %@", [socket connectedHost]);
+        //  NSLog(@"localhost: %@", [socket localHost]);
     }
     
     return self;
+}
+
+- (void)publishNetService {
+    if (_stopped) {
+        return;
+    }
+    if (_serviceNameProvider) {
+        [netService publishWithOptions:NSNetServiceNoAutoRename];
+    } else {
+        [netService publish];
+    }
 }
 
 - (void)initNetServiceWithName:(NSString *)servicename {
@@ -87,16 +114,13 @@
                                                  name:servicename
                                                  port:_serverport];
     [netService setDelegate:self];
-    
-    if (netService) {
-        [netService publish];
-    }
 
-    
+    [self publishNetService];
 }
 
 - (void)stop {
-    
+    _stopped = YES;
+
     if (netService) {
         
         [netService stop];
@@ -116,12 +140,10 @@
 }
 
 - (void)restart {
+    _stopped = NO;
 
-    if (netService) {
-        
-        [netService publish];
-    }
-    
+    [self publishNetService];
+
     if (socket) {
         
         NSError *error = nil;
@@ -168,16 +190,24 @@
 
 
 - (void)netService:(NSNetService *)sender didNotPublish:(NSDictionary<NSString *,NSNumber *> *)errorDict {
-    
-       NSInteger errorCode = [errorDict[NSNetServicesErrorCode] integerValue];
-
-        NSLog(@"Service failed to publish with error: %ld", (long)errorCode);
-  
-    if (errorCode == NSNetServicesCollisionError) {
-        
-        [self initNetServiceWithName:[NSString stringWithFormat:@"%@:%d (%ld)", [self name], _serverport, ++_tries]];
+    if (sender != netService || _stopped) {
+        return;
     }
-    
+    NSInteger errorCode = [errorDict[NSNetServicesErrorCode] integerValue];
+    NSLog(@"Service failed to publish with error: %ld", (long)errorCode);
+    if (errorCode == NSNetServicesCollisionError) {
+        _tries++;
+        NSString *serviceName = _serviceNameProvider ? _serviceNameProvider(_serverport, _tries)
+                                                     : [NSString stringWithFormat:@"%@:%d (%lu)", self.name,
+                                                                                  _serverport, (unsigned long)_tries];
+        [self initNetServiceWithName:serviceName];
+    } else if (_publicationErrorHandler) {
+        NSError *error =
+            [NSError errorWithDomain:NSNetServicesErrorDomain
+                                code:errorCode
+                            userInfo:@{NSLocalizedDescriptionKey : @"OSCQuery discovery could not be published."}];
+        _publicationErrorHandler(error);
+    }
 }
 
 #pragma mark Socket stuff
