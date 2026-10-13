@@ -12,6 +12,7 @@
 @interface AppDelegate ()
 
 @property (weak) IBOutlet NSWindow *window;
+@property (weak, nonatomic) NSTextField *serverNameField;
 @end
 
 @implementation AppDelegate
@@ -30,6 +31,39 @@
     
     [[self serversTableView] setDoubleAction:@selector(serverSelected)];
     [[self addressSpaceTableView] setDoubleAction:@selector(addressSelected)];
+}
+
+// Rename only the first local test server; the second still exercises the legacy initializer.
+- (IBAction)renameFirstServer:(id)sender {
+    NSString *name = [[self.serverNameField.stringValue
+        stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] copy];
+    if (!testServer1 || name.length == 0) {
+        [self writeToLog:@"Enter a name for the running first test server."];
+        return;
+    }
+
+    IMTOSCQueryServiceNameProvider provider = ^NSString *(int port, NSUInteger collisionIndex) {
+        NSString *suffix = collisionIndex > 1
+                               ? [NSString stringWithFormat:@":%d (%lu)", port, (unsigned long)collisionIndex]
+                               : [NSString stringWithFormat:@":%d", port];
+        NSString *prefix = name;
+        while ([prefix lengthOfBytesUsingEncoding:NSUTF8StringEncoding] +
+                   [suffix lengthOfBytesUsingEncoding:NSUTF8StringEncoding] >
+               63) {
+            NSRange lastCharacter = [prefix rangeOfComposedCharacterSequenceAtIndex:prefix.length - 1];
+            prefix = [prefix substringToIndex:lastCharacter.location];
+        }
+        return [prefix stringByAppendingString:suffix];
+    };
+    __weak typeof(self) weakSelf = self;
+    [testServer1 renameWithName:name
+            serviceNameProvider:provider
+        publicationErrorHandler:^(NSError *error) {
+            [weakSelf
+                writeToLog:[NSString stringWithFormat:@"Discovery publication failed: %@", error.localizedDescription]];
+        }];
+    self.serverNameField.stringValue = name;
+    [self writeToLog:[NSString stringWithFormat:@"Server 1 name: %@. Query /?HOST_INFO without reconnecting.", name]];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -55,6 +89,38 @@
     
     [testServer1 addOSCAddress:@"/ping" withDescription:@"Ping"];
     [testServer2 addOSCAddress:@"/1/opacity/fader" withDescription:@"Fader opacity on Layer 1"];
+
+    // Make room below the log while keeping the existing XIB's controls anchored to the top.
+    NSView *contentView = self.window.contentView;
+    NSSize contentSize = contentView.bounds.size;
+    contentSize.height += 52;
+    [self.window setContentSize:contentSize];
+
+    NSTextField *nameLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 22, 105, 17)];
+    nameLabel.stringValue = @"Server 1 name:";
+    nameLabel.bezeled = NO;
+    nameLabel.drawsBackground = NO;
+    nameLabel.editable = NO;
+    nameLabel.selectable = NO;
+    nameLabel.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
+    [contentView addSubview:nameLabel];
+
+    NSTextField *nameField = [[NSTextField alloc] initWithFrame:NSMakeRect(130, 20, contentSize.width - 244, 22)];
+    nameField.stringValue = testServer1.name ?: @"TestQueryServer1";
+    nameField.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
+    nameField.target = self;
+    nameField.action = @selector(renameFirstServer:);
+    ((NSTextFieldCell *)nameField.cell).sendsActionOnEndEditing = NO;
+    [contentView addSubview:nameField];
+    self.serverNameField = nameField;
+
+    NSButton *renameButton = [[NSButton alloc] initWithFrame:NSMakeRect(contentSize.width - 106, 18, 86, 26)];
+    renameButton.title = @"Rename";
+    renameButton.bezelStyle = NSBezelStyleRounded;
+    renameButton.autoresizingMask = NSViewMinXMargin | NSViewMaxYMargin;
+    renameButton.target = self;
+    renameButton.action = @selector(renameFirstServer:);
+    [contentView addSubview:renameButton];
     //[testServer1 addOSCAddress:@"/test/1/fader" withDescription:@"Fader on Layer 1"];
     //[testServer1 setType:IMTOSCQuery_TYPE_FLOAT forAddress:@"/test/1/fader"];
     //[testServer1 setRangeWithMin:[NSNumber numberWithFloat:0] max:[NSNumber numberWithFloat:1] forAddress:@"/test/1/fader"];
